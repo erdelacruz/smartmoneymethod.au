@@ -6,6 +6,7 @@
 //   - Darvas Box
 //   - RSI
 //   - Fibonacci Retracement
+//   - Risk Management
 // ============================================================
 
 import React, { useState } from 'react';
@@ -214,6 +215,59 @@ function FibChart() {
 }
 
 // ---------------------------------------------------------------------------
+function RiskChart() {
+  const W = 400, H = 160;
+  // Two trades: one with 1:3 R:R (winner), one with 1:1 (loser)
+  // Visualise as a risk/reward diagram with entry, stop-loss and target lines
+  const entryY   = H * 0.5;
+  const stopY    = H * 0.75;   // stop-loss below entry
+  const target1Y = H * 0.125;  // 1:3 target
+  const target2Y = H * 0.35;   // 1:1.5 target
+
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: 'auto', display: 'block' }}>
+      {/* Grid */}
+      {[0.25, 0.5, 0.75].map(r => (
+        <line key={r} x1="0" y1={H * r} x2={W} y2={H * r}
+          stroke="rgba(0,0,0,0.04)" strokeWidth="1" strokeDasharray="4,4" />
+      ))}
+
+      {/* Stop-loss zone (red fill) */}
+      <rect x="60" y={entryY} width={W - 80} height={stopY - entryY}
+        fill="rgba(240,78,78,0.08)" rx="2" />
+
+      {/* Target zone (green fill) */}
+      <rect x="60" y={target1Y} width={W - 80} height={entryY - target1Y}
+        fill="rgba(0,200,150,0.08)" rx="2" />
+
+      {/* Stop-loss line */}
+      <line x1="40" y1={stopY} x2={W - 20} y2={stopY}
+        stroke="#F04E4E" strokeWidth="1.5" strokeDasharray="6,3" />
+      <text x="44" y={stopY - 4} fill="#F04E4E" fontSize="10" fontFamily="DM Sans,sans-serif">Stop-Loss  −1R</text>
+
+      {/* Entry line */}
+      <line x1="40" y1={entryY} x2={W - 20} y2={entryY}
+        stroke="#D4A017" strokeWidth="2" />
+      <text x="44" y={entryY - 5} fill="#D4A017" fontSize="10" fontFamily="DM Sans,sans-serif">Entry</text>
+
+      {/* Target 1:3 line */}
+      <line x1="40" y1={target1Y} x2={W - 20} y2={target1Y}
+        stroke="#00C896" strokeWidth="1.5" strokeDasharray="6,3" />
+      <text x="44" y={target1Y - 4} fill="#00C896" fontSize="10" fontFamily="DM Sans,sans-serif">Target 1:3  +3R</text>
+
+      {/* Target 1:2 line */}
+      <line x1="40" y1={target2Y} x2={W - 20} y2={target2Y}
+        stroke="#378ADD" strokeWidth="1.5" strokeDasharray="4,3" />
+      <text x="44" y={target2Y - 4} fill="#378ADD" fontSize="10" fontFamily="DM Sans,sans-serif">Target 1:2  +2R</text>
+
+      {/* R labels on right */}
+      <text x={W - 16} y={stopY + 4}   fill="#F04E4E" fontSize="9" fontFamily="DM Mono,monospace" textAnchor="end">−R</text>
+      <text x={W - 16} y={entryY + 4}  fill="#D4A017" fontSize="9" fontFamily="DM Mono,monospace" textAnchor="end">0</text>
+      <text x={W - 16} y={target1Y + 4} fill="#00C896" fontSize="9" fontFamily="DM Mono,monospace" textAnchor="end">+3R</text>
+    </svg>
+  );
+}
+
 // Tab content definitions
 // ---------------------------------------------------------------------------
 const TABS = [
@@ -324,6 +378,37 @@ const TABS = [
       { param: 'Confirmation', value: 'Use with candlestick patterns or volume for higher confidence' },
     ],
     Chart: FibChart,
+  },
+  {
+    id:      'risk',
+    label:   'Risk Management',
+    short:   'Risk Mgmt',
+    icon:    '🛡️',
+    color:   '#F04E4E',
+    tagline: 'Protect your capital and survive the inevitable losing trades',
+    description: `Risk management is the discipline of controlling how much capital you put at risk
+      on any single trade and across your portfolio. Even the best strategy fails without it —
+      professional traders focus first on limiting losses and second on capturing gains. The golden
+      rule: never risk more than 1–2% of your total account on a single trade.`,
+    types: [
+      { name: 'Position Sizing',    desc: 'Calculate the correct number of shares to buy so your maximum loss equals a fixed % of account equity.' },
+      { name: 'Stop-Loss Orders',   desc: 'A pre-set price at which you exit a losing trade, removing emotion from the decision.' },
+      { name: 'Risk:Reward Ratio',  desc: 'The ratio of potential profit to potential loss. A 1:2 ratio means risking $1 to make $2.' },
+      { name: 'Portfolio Heat',     desc: 'Total risk across all open positions at once. Keep total portfolio heat under 5–6%.' },
+    ],
+    signals: [
+      { signal: '1% Rule',          detail: 'Risk no more than 1% of your account on any single trade — preserves capital during losing streaks.' },
+      { signal: '1:2+ R:R',         detail: 'Only take trades where potential reward is at least twice the risk. Positive expectancy over time.' },
+      { signal: 'Break-even Stop',  detail: 'Once price moves 1R in your favour, move stop to entry — eliminate risk on the trade.' },
+      { signal: 'Max Drawdown',     detail: 'Define your maximum acceptable account drawdown (e.g. 10%) and pause trading if hit.' },
+    ],
+    params: [
+      { param: 'Position size formula', value: 'Account × Risk% ÷ (Entry − Stop) = Shares to buy' },
+      { param: 'Typical risk per trade', value: '0.5% – 2% of total account equity' },
+      { param: 'Minimum R:R',            value: '1:2 for trend trades; 1:1.5 acceptable with high win rate' },
+      { param: 'Portfolio heat limit',   value: 'No more than 5–6% total risk across all open positions' },
+    ],
+    Chart: RiskChart,
   },
 ];
 

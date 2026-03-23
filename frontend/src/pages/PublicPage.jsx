@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useTheme } from '../context/ThemeContext';
 
 // ---------------------------------------------------------------------------
 // Persist a visitor UUID in localStorage for backend tracking
@@ -79,6 +81,7 @@ function Sparkline({ data }) {
 // PublicPage
 // ---------------------------------------------------------------------------
 export default function PublicPage() {
+  const { theme } = useTheme();
   const [activeFilter, setActiveFilter] = useState('All');
   const [activeTab,    setActiveTab]    = useState('1W');
 
@@ -101,18 +104,6 @@ export default function PublicPage() {
   return (
     <div>
 
-      {/* ── TICKER TAPE ─────────────────────────────────────── */}
-      <div className="ticker-wrap">
-        <div className="ticker-inner">
-          {[...TICKER_ITEMS, ...TICKER_ITEMS].map((item, i) => (
-            <span key={i} className="ticker-item">
-              <span className="ticker-sym">{item.sym}</span>
-              <span className="ticker-price">{item.price}</span>
-              <span className={`ticker-chg ${item.up ? 'up' : 'down'}`}>{item.chg}</span>
-            </span>
-          ))}
-        </div>
-      </div>
 
       {/* ── HERO ────────────────────────────────────────────── */}
       <section>
@@ -120,229 +111,126 @@ export default function PublicPage() {
           <div className="hero-left">
             <div className="hero-badge">Australia's #1 money method</div>
             <h1>
-              Your money,<br />
-              <em>finally clear</em>
+              The financial toolkit<br />
+              <em>every Australian needs.</em>
             </h1>
             <p className="hero-desc">
-              See your complete financial picture — bank accounts, super, property and investments — all in one place. The Smart Money Method, built for Australians.
+              Understand your take-home pay, build a bulletproof budget and savings, harness the power of compounding, and learn how to trade and invest — all in one smart platform.
             </p>
-            <div className="hero-ctas">
-              <button className="btn-hero">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-                Start for free
-              </button>
-              <button className="btn-hero-outline">See how it works</button>
-            </div>
-            <div className="hero-trust">
-              <span>Bank-grade security</span>
-              <span className="trust-divider" />
-              <span>Australian owned</span>
-              <span className="trust-divider" />
-              <span>Free to start</span>
-            </div>
           </div>
 
           <div className="hero-visual">
-            {/* Floating card — top */}
+            {/* Floating badge — top right */}
             <div className="mini-card" style={{ top: '-20px', right: '-10px' }}>
-              <div className="mini-card-icon" style={{ background: 'rgba(0,200,150,0.12)' }}>📈</div>
+              <div className="mini-card-icon" style={{ background: 'rgba(0,200,150,0.12)' }}>💰</div>
               <div className="mini-card-text">
-                <div className="mini-card-title">BHP +3.2%</div>
-                <div className="mini-card-sub">Today's top mover</div>
+                <div className="mini-card-title">Interest earned</div>
+                <div className="mini-card-sub">$14,283 over 5 yrs</div>
               </div>
             </div>
 
-            {/* Chart card */}
+            {/* Savings growth chart card */}
             <div className="hero-chart-card">
               <div className="chart-card-header">
                 <div>
-                  <div className="chart-stock-name">CBA.AX</div>
-                  <div className="chart-stock-sub">Commonwealth Bank of Australia</div>
+                  <div className="chart-stock-name">Savings Growth</div>
+                  <div className="chart-stock-sub">$500 / month · 5% p.a. interest</div>
                 </div>
                 <div className="chart-price-block">
-                  <div className="chart-price">$118.50</div>
-                  <div className="chart-change">▲ +1.24 (+1.06%)</div>
+                  <div className="chart-price">$44,283</div>
+                  <div className="chart-change">▲ after 5 years</div>
                 </div>
               </div>
 
-              <div className="chart-tabs">
-                {['1D','1W','1M','3M','1Y'].map(tab => (
-                  <button
-                    key={tab}
-                    className={`chart-tab${activeTab === tab ? ' active' : ''}`}
-                    onClick={() => setActiveTab(tab)}
-                  >{tab}</button>
+              {/* Year labels row */}
+              <div className="savings-chart-years">
+                {['Yr 1','Yr 2','Yr 3','Yr 4','Yr 5'].map(y => (
+                  <span key={y}>{y}</span>
                 ))}
               </div>
 
-              <div className="chart-svg-wrap">
-                <svg width="100%" height="120" viewBox="0 0 400 120" preserveAspectRatio="none">
-                  <defs>
-                    <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#D4A017" stopOpacity="0.25" />
-                      <stop offset="100%" stopColor="#D4A017" stopOpacity="0" />
-                    </linearGradient>
-                  </defs>
-                  <path d="M0,90 C20,85 30,95 50,80 C70,65 80,70 100,55 C120,40 130,50 150,45 C170,40 180,60 200,50 C220,40 230,30 250,25 C270,20 280,35 300,28 C320,21 340,15 360,10 C375,7 390,12 400,8 L400,120 L0,120 Z" fill="url(#areaGrad)" />
-                  <path d="M0,90 C20,85 30,95 50,80 C70,65 80,70 100,55 C120,40 130,50 150,45 C170,40 180,60 200,50 C220,40 230,30 250,25 C270,20 280,35 300,28 C320,21 340,15 360,10 C375,7 390,12 400,8" fill="none" stroke="#D4A017" strokeWidth="1.8" />
-                  <line x1="0" y1="8" x2="400" y2="8" stroke="rgba(0,200,150,0.2)" strokeWidth="1" strokeDasharray="4,4" />
-                  <circle cx="400" cy="8" r="4" fill="#00C896" />
-                </svg>
+              {/* Stacked bar chart — contributions vs interest */}
+              <div className="savings-chart-bars">
+                {[
+                  { contrib: 6000,  interest: 154   },
+                  { contrib: 12000, interest: 618   },
+                  { contrib: 18000, interest: 1400  },
+                  { contrib: 24000, interest: 2510  },
+                  { contrib: 30000, interest: 3871  },
+                ].map((d, i) => {
+                  const total   = d.contrib + d.interest;
+                  const maxVal  = 33871;
+                  const contPct = (d.contrib  / maxVal * 100).toFixed(1);
+                  const intPct  = (d.interest / maxVal * 100).toFixed(1);
+                  return (
+                    <div key={i} className="savings-bar-col">
+                      <div className="savings-bar-stack">
+                        <div className="savings-bar-interest" style={{ height: `${intPct}%` }} />
+                        <div className="savings-bar-contrib"  style={{ height: `${contPct}%` }} />
+                      </div>
+                      <div className="savings-bar-val">${(total/1000).toFixed(0)}K</div>
+                    </div>
+                  );
+                })}
               </div>
 
-              <div className="chart-mini-stats">
-                <div className="chart-mini-stat">
-                  <div className="chart-mini-stat-label">Open</div>
-                  <div className="chart-mini-stat-val">$117.26</div>
+              {/* Legend + summary stats */}
+              <div className="savings-chart-footer">
+                <div className="savings-chart-legend">
+                  <span><span className="savings-dot contrib" />Contributions</span>
+                  <span><span className="savings-dot interest" />Interest</span>
                 </div>
-                <div className="chart-mini-stat">
-                  <div className="chart-mini-stat-label">High</div>
-                  <div className="chart-mini-stat-val">$119.10</div>
-                </div>
-                <div className="chart-mini-stat">
-                  <div className="chart-mini-stat-label">Volume</div>
-                  <div className="chart-mini-stat-val">4.2M</div>
+                <div className="chart-mini-stats" style={{ marginTop: 0 }}>
+                  <div className="chart-mini-stat">
+                    <div className="chart-mini-stat-label">Deposited</div>
+                    <div className="chart-mini-stat-val">$30,000</div>
+                  </div>
+                  <div className="chart-mini-stat">
+                    <div className="chart-mini-stat-label">Interest</div>
+                    <div className="chart-mini-stat-val" style={{ color:'var(--success)' }}>$14,283</div>
+                  </div>
+                  <div className="chart-mini-stat">
+                    <div className="chart-mini-stat-label">Rate</div>
+                    <div className="chart-mini-stat-val">5% p.a.</div>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Floating card — bottom */}
+            {/* Floating badge — bottom left */}
             <div className="mini-card" style={{ bottom: '-16px', left: '-10px' }}>
-              <div className="mini-card-icon" style={{ background: 'rgba(239,159,39,0.12)' }}>🏆</div>
+              <div className="mini-card-icon" style={{ background: 'rgba(212,160,23,0.12)' }}>🏦</div>
               <div className="mini-card-text">
-                <div className="mini-card-title">Portfolio up 12.4%</div>
-                <div className="mini-card-sub">This month</div>
+                <div className="mini-card-title">Savings up 47.6%</div>
+                <div className="mini-card-sub">vs. no interest</div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── STATS BAR ───────────────────────────────────────── */}
-      <div className="stats-bar">
-        <div className="stats-bar-inner">
-          <div className="stat-bar-item">
-            <div className="stat-bar-num">2,200<span>+</span></div>
-            <div className="stat-bar-label">ASX-listed securities tracked</div>
-          </div>
-          <div className="stat-bar-item">
-            <div className="stat-bar-num">$<span>2.4</span>T</div>
-            <div className="stat-bar-label">Total market capitalisation</div>
-          </div>
-          <div className="stat-bar-item">
-            <div className="stat-bar-num">48<span>K</span></div>
-            <div className="stat-bar-label">Active traders on platform</div>
-          </div>
-          <div className="stat-bar-item">
-            <div className="stat-bar-num">99<span>.9%</span></div>
-            <div className="stat-bar-label">Platform uptime this year</div>
-          </div>
-        </div>
-      </div>
 
-      {/* ── FEATURES ────────────────────────────────────────── */}
-      <section className="features">
-        <div className="section-eyebrow">Why TradeASX</div>
-        <h2 className="section-title">Everything you need to trade the ASX</h2>
-        <p className="section-sub">From real-time quotes to advanced charting — built specifically for Australian investors.</p>
-        <div className="features-grid">
-          {FEATURES.map(f => (
-            <div key={f.title} className="feature-card">
-              <div className="feature-icon" style={{ background: f.bg }}>{f.icon}</div>
-              <div className="feature-title">{f.title}</div>
-              <div className="feature-desc">{f.desc}</div>
-              <span className="feature-tag">{f.tag}</span>
+      {/* ── TOOLS ───────────────────────────────────────────── */}
+      <section className="tools-section">
+        <div className="section-eyebrow">Financial Tools</div>
+        <h2 className="section-title">Tools to help you manage your money</h2>
+        <div className="tools-grid">
+          {[
+            { icon:'📈', title:'Trading P/L Calculator',  href:'/calculator',             desc:'Calculate your profit or loss on any trade. Enter your entry price, exit price, quantity and brokerage to see your net return instantly.' },
+            { icon:'💵', title:'Pay Calculator',           href:'/pay-calculator',         desc:'Work out your take-home pay after tax, Medicare levy and super contributions. Supports weekly, fortnightly and monthly pay cycles.' },
+            { icon:'📋', title:'Budget Planner',           href:'/budget',                 desc:'Plan your monthly budget by tracking income and expenses across categories. Visualise where your money goes and find opportunities to save.' },
+            { icon:'📊', title:'Compounding Calculator',   href:'/compounding-calculator', desc:'See the power of compound interest over time. Enter a starting amount, regular contributions, interest rate and time horizon to project your wealth.' },
+          ].map(tool => (
+            <div key={tool.title} className="tool-card">
+              <div className="tool-icon">{tool.icon}</div>
+              <div className="tool-title">{tool.title}</div>
+              <div className="tool-desc">{tool.desc}</div>
+              <Link to={tool.href} className="tool-btn">Open Tool →</Link>
             </div>
           ))}
         </div>
       </section>
 
-      {/* ── MARKET TABLE ────────────────────────────────────── */}
-      <div className="market-section">
-        <div className="market-inner">
-          <div className="market-header">
-            <div>
-              <div className="section-eyebrow">Live market</div>
-              <h2 className="market-title">Top ASX movers today</h2>
-            </div>
-            <div className="market-filters">
-              {['All','Financials','Materials','Healthcare','Tech'].map(f => (
-                <button
-                  key={f}
-                  className={`mf-btn${activeFilter === f ? ' active' : ''}`}
-                  onClick={() => setActiveFilter(f)}
-                >{f}</button>
-              ))}
-            </div>
-          </div>
-
-          <table>
-            <thead>
-              <tr>
-                <th style={{ textAlign: 'left' }}>Symbol</th>
-                <th>Price</th>
-                <th>Change</th>
-                <th>% Change</th>
-                <th>Volume</th>
-                <th>Mkt Cap</th>
-                <th>Sector</th>
-                <th>7D Trend</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredStocks.map(s => {
-                const up = s.chg >= 0;
-                return (
-                  <tr key={s.sym}>
-                    <td>
-                      <div className="td-sym">{s.sym}</div>
-                      <div className="td-name">{s.name}</div>
-                    </td>
-                    <td className="td-price">${s.price.toFixed(2)}</td>
-                    <td className={up ? 'td-up' : 'td-down'}>{up ? '▲' : '▼'} {Math.abs(s.chg).toFixed(2)}</td>
-                    <td className={up ? 'td-up' : 'td-down'}>{up ? '▲' : '▼'} {Math.abs(s.pct).toFixed(2)}%</td>
-                    <td>{s.vol}</td>
-                    <td>{s.cap}</td>
-                    <td><span className="td-sector">{s.sec}</span></td>
-                    <td><Sparkline data={s.trend} /></td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* ── HOW IT WORKS ────────────────────────────────────── */}
-      <section className="how">
-        <div className="section-eyebrow">Getting started</div>
-        <h2 className="section-title">Up and running in minutes</h2>
-        <div className="steps">
-          {STEPS.map(s => (
-            <div key={s.n} className="step">
-              <div className="step-num">{s.n}</div>
-              <div className="step-title">{s.title}</div>
-              <div className="step-desc">{s.desc}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ── CTA ─────────────────────────────────────────────── */}
-      <div className="cta-section">
-        <div className="cta-inner">
-          <div className="cta-text">
-            <h2>Ready to trade smarter?</h2>
-            <p>Join thousands of Australian investors who use TradeASX to research, track and monitor the ASX — completely free to get started.</p>
-          </div>
-          <div className="cta-actions">
-            <button className="btn-hero">Create free account →</button>
-            <div className="cta-note">No credit card · Cancel anytime</div>
-          </div>
-        </div>
-      </div>
 
       {/* ── FOOTER ──────────────────────────────────────────── */}
       <footer className="site-footer">
@@ -350,7 +238,7 @@ export default function PublicPage() {
           <div>
             <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:10 }}>
               <svg width="32" height="32" viewBox="0 0 40 40">
-                <rect width="40" height="40" rx="10" fill="#1A2838"/>
+                <rect width="40" height="40" rx="10" fill={theme === 'light' ? '#1C3553' : '#1A2838'}/>
                 <circle cx="20" cy="20" r="13" fill="none" stroke="#D4A017" strokeWidth="1.5"/>
                 <circle cx="20" cy="20" r="9" fill="#D4A017" opacity="0.15"/>
                 <line x1="20" y1="26" x2="20" y2="15" stroke="#D4A017" strokeWidth="1.8" strokeLinecap="round"/>
@@ -361,36 +249,6 @@ export default function PublicPage() {
               <div className="footer-brand-name">Smart Money <span>Method</span></div>
             </div>
             <div className="footer-brand-desc">Australia's smartest money platform — net worth tracking, budgeting, super management and tax tools built for everyday Australians.</div>
-          </div>
-          <div>
-            <div className="footer-col-title">Platform</div>
-            <div className="footer-links">
-              <a href="#" className="footer-link">Live Markets</a>
-              <a href="#" className="footer-link">Charts</a>
-              <a href="#" className="footer-link">Stock Screener</a>
-              <a href="#" className="footer-link">Portfolio Tracker</a>
-              <a href="#" className="footer-link">Price Alerts</a>
-            </div>
-          </div>
-          <div>
-            <div className="footer-col-title">Markets</div>
-            <div className="footer-links">
-              <a href="#" className="footer-link">ASX 200</a>
-              <a href="#" className="footer-link">Financials</a>
-              <a href="#" className="footer-link">Resources</a>
-              <a href="#" className="footer-link">Healthcare</a>
-              <a href="#" className="footer-link">Technology</a>
-            </div>
-          </div>
-          <div>
-            <div className="footer-col-title">Company</div>
-            <div className="footer-links">
-              <a href="#" className="footer-link">About</a>
-              <a href="#" className="footer-link">Pricing</a>
-              <a href="#" className="footer-link">API Docs</a>
-              <a href="#" className="footer-link">Contact</a>
-              <a href="#" className="footer-link">Careers</a>
-            </div>
           </div>
         </div>
         <div className="footer-bottom">

@@ -10,7 +10,8 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
-import { AuthProvider } from './context/AuthContext'; // Global auth state wrapper
+import { AuthProvider }  from './context/AuthContext';  // Global auth state wrapper
+import { ThemeProvider } from './context/ThemeContext'; // Light / dark theme
 import Navbar          from './components/Navbar';    // Navigation bar shown on every page
 import ProtectedRoute  from './components/ProtectedRoute'; // Guards admin routes
 
@@ -19,11 +20,15 @@ import LoginPage             from './pages/LoginPage';             // Login form
 import AdminPage             from './pages/AdminPage';             // Only accessible when authenticated
 import TradingIndicatorPage  from './pages/TradingIndicatorPage';  // Trading indicators guide
 import ProfitLossPage        from './pages/ProfitLossPage';         // Profit/Loss calculator
+import PayCalculatorPage          from './pages/PayCalculatorPage';           // Australian Pay Calculator
+import CompoundingCalculatorPage  from './pages/CompoundingCalculatorPage';  // Money Compounding Calculator
+import BudgetToolPage            from './pages/BudgetToolPage';              // Budget Planner
 
 export default function App() {
   return (
     // AuthProvider wraps everything so every component in the tree can
     // call useAuth() to get user/token/login/logout
+    <ThemeProvider>
     <AuthProvider>
       {/* BrowserRouter enables client-side routing.
           It listens to the browser's URL bar and re-renders without full page reloads. */}
@@ -56,11 +61,21 @@ export default function App() {
             {/* Profit/Loss Calculator */}
             <Route path="/calculator" element={<ProfitLossPage />} />
 
+            {/* Australian Pay Calculator */}
+            <Route path="/pay-calculator" element={<PayCalculatorPage />} />
+
+            {/* Money Compounding Calculator */}
+            <Route path="/compounding-calculator" element={<CompoundingCalculatorPage />} />
+
+            {/* Budget Planner */}
+            <Route path="/budget" element={<BudgetToolPage />} />
+
             {/* Catch-all: redirect any unknown URL back to the home page */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
       </BrowserRouter>
     </AuthProvider>
+    </ThemeProvider>
   );
 }
