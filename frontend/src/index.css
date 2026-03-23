@@ -1,23 +1,26 @@
 /* ============================================================
-   Global Stylesheet — TradeASX
+   Global Stylesheet — Smart Money Method Australia
    ============================================================ */
 
 :root {
-  --bg:         #0A0E17;
-  --bg2:        #0F1520;
-  --bg3:        #141C2E;
-  --bg4:        #1A2438;
+  --bg:         #0B1219;
+  --bg2:        #0F1A24;
+  --bg3:        #142030;
+  --bg4:        #1A2A3E;
   --border:     rgba(255,255,255,0.07);
   --border2:    rgba(255,255,255,0.12);
-  --primary:    #378ADD;
-  --primary-dk: #185FA5;
-  --text:       #E8EDF5;
+  --primary:    #D4A017;
+  --primary-dk: #c4920f;
+  --text:       #EDF0F5;
   --text2:      #8A96B0;
   --muted:      #4A5570;
-  --surface:    #0F1520;
+  --surface:    #0F1A24;
   --success:    #00C896;
   --danger:     #F04E4E;
-  --gold:       #EF9F27;
+  --gold:       #D4A017;
+  --gold2:      #F0C84A;
+  --gold-dim:   rgba(212,160,23,0.12);
+  --gold-dim2:  rgba(212,160,23,0.22);
   --radius:     8px;
 }
 
@@ -38,8 +41,8 @@ body::before {
   content: '';
   position: fixed; inset: 0;
   background-image:
-    linear-gradient(rgba(55,138,221,0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(55,138,221,0.04) 1px, transparent 1px);
+    linear-gradient(rgba(212,160,23,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(212,160,23,0.03) 1px, transparent 1px);
   background-size: 48px 48px;
   pointer-events: none;
   z-index: 0;
@@ -257,7 +260,7 @@ body::before {
 }
 
 .hero h1 {
-  font-family: 'Instrument Serif', serif;
+  font-family: 'DM Serif Display', serif;
   font-size: 54px;
   line-height: 1.05;
   letter-spacing: -1px;
@@ -455,7 +458,7 @@ body::before {
 .stat-bar-item:first-child { padding-left: 0; }
 .stat-bar-item:last-child  { border-right: none; }
 .stat-bar-num {
-  font-family: 'Instrument Serif', serif;
+  font-family: 'DM Serif Display', serif;
   font-size: 42px;
   letter-spacing: -1px;
   color: var(--text);
@@ -479,7 +482,7 @@ body::before {
   margin-bottom: 12px;
 }
 .section-title {
-  font-family: 'Instrument Serif', serif;
+  font-family: 'DM Serif Display', serif;
   font-size: 40px;
   letter-spacing: -.5px;
   color: var(--text);
@@ -549,7 +552,7 @@ body::before {
   margin-bottom: 28px;
 }
 .market-title {
-  font-family: 'Instrument Serif', serif;
+  font-family: 'DM Serif Display', serif;
   font-size: 30px;
   letter-spacing: -.5px;
   color: var(--text);
@@ -675,7 +678,7 @@ tbody td:first-child { text-align: left; }
   pointer-events: none;
 }
 .cta-text h2 {
-  font-family: 'Instrument Serif', serif;
+  font-family: 'DM Serif Display', serif;
   font-size: 36px;
   letter-spacing: -.5px;
   color: var(--text);

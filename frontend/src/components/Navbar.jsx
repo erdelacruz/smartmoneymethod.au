@@ -31,17 +31,20 @@ export default function Navbar() {
       <div className="nav-left">
         {/* App brand / home link */}
         <Link to="/" className="nav-brand">
-          {/* Icon: dark rounded square with stock-chart line */}
-          <svg width="36" height="36" viewBox="0 0 56 56" aria-hidden="true" style={{flexShrink:0}}>
-            <rect width="56" height="56" rx="12" fill="#1A2235"/>
-            <polyline points="10,40 20,24 30,30 46,12" fill="none" stroke="#378ADD" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-            <circle cx="46" cy="12" r="3.5" fill="#378ADD"/>
-            <line x1="10" y1="46" x2="46" y2="46" stroke="#378ADD" strokeWidth="1" opacity="0.3"/>
+          {/* Icon: coin with upward arrow */}
+          <svg width="36" height="36" viewBox="0 0 40 40" aria-hidden="true" style={{flexShrink:0}}>
+            <rect width="40" height="40" rx="10" fill="#1A2838"/>
+            <circle cx="20" cy="20" r="13" fill="none" stroke="#D4A017" strokeWidth="1.5"/>
+            <circle cx="20" cy="20" r="9" fill="#D4A017" opacity="0.15"/>
+            <line x1="20" y1="26" x2="20" y2="15" stroke="#D4A017" strokeWidth="1.8" strokeLinecap="round"/>
+            <path d="M16 19 L20 15 L24 19" fill="none" stroke="#D4A017" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+            <line x1="15.5" y1="22" x2="24.5" y2="22" stroke="#D4A017" strokeWidth="1.3" strokeLinecap="round" opacity="0.7"/>
+            <line x1="15.5" y1="25" x2="24.5" y2="25" stroke="#D4A017" strokeWidth="1.3" strokeLinecap="round" opacity="0.7"/>
           </svg>
           {/* Wordmark + tagline */}
           <div className="nav-brand-text">
-            <span className="nav-brand-name">Trade<span className="nav-brand-asx">ASX</span></span>
-            <span className="nav-brand-sub">Australian Stock Exchange</span>
+            <span className="nav-brand-name">Smart Money <span className="nav-brand-asx">Method</span></span>
+            <span className="nav-brand-sub">Australia</span>
           </div>
         </Link>
 

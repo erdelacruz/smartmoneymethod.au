@@ -118,30 +118,29 @@ export default function PublicPage() {
       <section>
         <div className="hero">
           <div className="hero-left">
-            <div className="hero-badge">Live ASX market data</div>
+            <div className="hero-badge">Australia's #1 money method</div>
             <h1>
-              Trade smarter<br />
-              on the <em>Australian</em><br />
-              market
+              Your money,<br />
+              <em>finally clear</em>
             </h1>
             <p className="hero-desc">
-              Real-time ASX quotes, interactive charts, portfolio tracking and market intelligence — all in one clean, powerful platform.
+              See your complete financial picture — bank accounts, super, property and investments — all in one place. The Smart Money Method, built for Australians.
             </p>
             <div className="hero-ctas">
               <button className="btn-hero">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                   <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
-                Start trading free
+                Start for free
               </button>
-              <button className="btn-hero-outline">View live markets</button>
+              <button className="btn-hero-outline">See how it works</button>
             </div>
             <div className="hero-trust">
-              <span>200+ ASX stocks</span>
+              <span>Bank-grade security</span>
               <span className="trust-divider" />
-              <span>Live TradingView charts</span>
+              <span>Australian owned</span>
               <span className="trust-divider" />
-              <span>No credit card</span>
+              <span>Free to start</span>
             </div>
           </div>
 
@@ -182,12 +181,12 @@ export default function PublicPage() {
                 <svg width="100%" height="120" viewBox="0 0 400 120" preserveAspectRatio="none">
                   <defs>
                     <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#378ADD" stopOpacity="0.25" />
-                      <stop offset="100%" stopColor="#378ADD" stopOpacity="0" />
+                      <stop offset="0%" stopColor="#D4A017" stopOpacity="0.25" />
+                      <stop offset="100%" stopColor="#D4A017" stopOpacity="0" />
                     </linearGradient>
                   </defs>
                   <path d="M0,90 C20,85 30,95 50,80 C70,65 80,70 100,55 C120,40 130,50 150,45 C170,40 180,60 200,50 C220,40 230,30 250,25 C270,20 280,35 300,28 C320,21 340,15 360,10 C375,7 390,12 400,8 L400,120 L0,120 Z" fill="url(#areaGrad)" />
-                  <path d="M0,90 C20,85 30,95 50,80 C70,65 80,70 100,55 C120,40 130,50 150,45 C170,40 180,60 200,50 C220,40 230,30 250,25 C270,20 280,35 300,28 C320,21 340,15 360,10 C375,7 390,12 400,8" fill="none" stroke="#378ADD" strokeWidth="1.8" />
+                  <path d="M0,90 C20,85 30,95 50,80 C70,65 80,70 100,55 C120,40 130,50 150,45 C170,40 180,60 200,50 C220,40 230,30 250,25 C270,20 280,35 300,28 C320,21 340,15 360,10 C375,7 390,12 400,8" fill="none" stroke="#D4A017" strokeWidth="1.8" />
                   <line x1="0" y1="8" x2="400" y2="8" stroke="rgba(0,200,150,0.2)" strokeWidth="1" strokeDasharray="4,4" />
                   <circle cx="400" cy="8" r="4" fill="#00C896" />
                 </svg>
@@ -350,15 +349,18 @@ export default function PublicPage() {
         <div className="footer-top">
           <div>
             <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:10 }}>
-              <svg width="32" height="32" viewBox="0 0 36 36">
-                <rect width="36" height="36" rx="8" fill="#1A2235" />
-                <polyline points="6,24 12,15 18,19 28,8" fill="none" stroke="#378ADD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                <circle cx="28" cy="8" r="2.5" fill="#378ADD" />
-                <line x1="6" y1="28" x2="28" y2="28" stroke="#378ADD" strokeWidth="0.8" opacity="0.35" />
+              <svg width="32" height="32" viewBox="0 0 40 40">
+                <rect width="40" height="40" rx="10" fill="#1A2838"/>
+                <circle cx="20" cy="20" r="13" fill="none" stroke="#D4A017" strokeWidth="1.5"/>
+                <circle cx="20" cy="20" r="9" fill="#D4A017" opacity="0.15"/>
+                <line x1="20" y1="26" x2="20" y2="15" stroke="#D4A017" strokeWidth="1.8" strokeLinecap="round"/>
+                <path d="M16 19 L20 15 L24 19" fill="none" stroke="#D4A017" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                <line x1="15.5" y1="22" x2="24.5" y2="22" stroke="#D4A017" strokeWidth="1.3" strokeLinecap="round" opacity="0.7"/>
+                <line x1="15.5" y1="25" x2="24.5" y2="25" stroke="#D4A017" strokeWidth="1.3" strokeLinecap="round" opacity="0.7"/>
               </svg>
-              <div className="footer-brand-name">Trade<span>ASX</span></div>
+              <div className="footer-brand-name">Smart Money <span>Method</span></div>
             </div>
-            <div className="footer-brand-desc">Australian stock market data, charts and portfolio tools for serious investors. Powered by real-time ASX feeds and TradingView.</div>
+            <div className="footer-brand-desc">Australia's smartest money platform — net worth tracking, budgeting, super management and tax tools built for everyday Australians.</div>
           </div>
           <div>
             <div className="footer-col-title">Platform</div>
@@ -392,7 +394,7 @@ export default function PublicPage() {
           </div>
         </div>
         <div className="footer-bottom">
-          <span>© 2026 TradeASX. All rights reserved.</span>
+          <span>© 2026 Smart Money Method Australia Pty Ltd. All rights reserved.</span>
           <div className="footer-legal">
             <a href="#" className="footer-link">Privacy Policy</a>
             <a href="#" className="footer-link">Terms of Service</a>
