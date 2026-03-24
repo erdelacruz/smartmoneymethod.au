@@ -15,17 +15,11 @@ export default function Navbar() {
   const { user, logout } = useAuth();
   const { theme, toggle: toggleTheme } = useTheme();
   const navigate = useNavigate();
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [openMenu, setOpenMenu] = useState(null); // 'investing' | 'trading' | null
   const closeTimer = useRef(null);
 
-  const openDropdown = () => {
-    clearTimeout(closeTimer.current);
-    setDropdownOpen(true);
-  };
-
-  const closeDropdown = () => {
-    closeTimer.current = setTimeout(() => setDropdownOpen(false), 120);
-  };
+  const openDropdown  = (name) => { clearTimeout(closeTimer.current); setOpenMenu(name); };
+  const closeDropdown = ()     => { closeTimer.current = setTimeout(() => setOpenMenu(null), 120); };
 
   const handleLogout = () => {
     logout();
@@ -55,39 +49,57 @@ export default function Navbar() {
         <div className="nav-links nav-links-left">
           <Link to="/">Home</Link>
 
-          {/* ASX Trading & Investing dropdown */}
+          {/* Share/ETF Investing dropdown */}
           <div
-            className={`nav-dropdown${dropdownOpen ? ' open' : ''}`}
-            onMouseEnter={openDropdown}
+            className={`nav-dropdown${openMenu === 'investing' ? ' open' : ''}`}
+            onMouseEnter={() => openDropdown('investing')}
             onMouseLeave={closeDropdown}
           >
             <button className="nav-dropdown-trigger">
-              Share Trading &amp; Investing
+              Share & ETF Investing
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style={{marginLeft:4}}>
                 <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </button>
-            {dropdownOpen && (
-              <div className="nav-dropdown-menu" onMouseEnter={openDropdown} onMouseLeave={closeDropdown}>
-                <Link to="/indicators" className="nav-dropdown-item" onClick={() => setDropdownOpen(false)}>
-                  <span className="nav-dropdown-icon">📊</span>
-                  <div>
-                    <div className="nav-dropdown-label">Learn Technical Indicators</div>
-                    <div className="nav-dropdown-sub">Charts, patterns & analysis tools</div>
-                  </div>
-                </Link>
-                <Link to="/calculator" className="nav-dropdown-item" onClick={() => setDropdownOpen(false)}>
-                  <span className="nav-dropdown-icon">📈</span>
-                  <div>
-                    <div className="nav-dropdown-label">P/L Calculator</div>
-                    <div className="nav-dropdown-sub">Calculate your trading profit & loss</div>
-                  </div>
-                </Link>
-                <Link to="/dca-calculator" className="nav-dropdown-item" onClick={() => setDropdownOpen(false)}>
+            {openMenu === 'investing' && (
+              <div className="nav-dropdown-menu" onMouseEnter={() => openDropdown('investing')} onMouseLeave={closeDropdown}>
+                <Link to="/dca-calculator" className="nav-dropdown-item" onClick={() => setOpenMenu(null)}>
                   <span className="nav-dropdown-icon">📉</span>
                   <div>
                     <div className="nav-dropdown-label">Dollar Cost Averaging</div>
-                    <div className="nav-dropdown-sub">Simulate dollar cost averaging investing</div>
+                    <div className="nav-dropdown-sub">Simulate DCA Method for any ASX stock and ETF Funds</div>
+                  </div>
+                </Link>
+              </div>
+            )}
+          </div>
+
+          {/* Share Trading dropdown */}
+          <div
+            className={`nav-dropdown${openMenu === 'trading' ? ' open' : ''}`}
+            onMouseEnter={() => openDropdown('trading')}
+            onMouseLeave={closeDropdown}
+          >
+            <button className="nav-dropdown-trigger">
+              Share Trading
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style={{marginLeft:4}}>
+                <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+            {openMenu === 'trading' && (
+              <div className="nav-dropdown-menu" onMouseEnter={() => openDropdown('trading')} onMouseLeave={closeDropdown}>
+                <Link to="/indicators" className="nav-dropdown-item" onClick={() => setOpenMenu(null)}>
+                  <span className="nav-dropdown-icon">📊</span>
+                  <div>
+                    <div className="nav-dropdown-label">Technical Indicators</div>
+                    <div className="nav-dropdown-sub">Price Action Analysis using Moving Average (MA), Darvas Box, RSI & Fibonacci Retracement</div>
+                  </div>
+                </Link>
+                <Link to="/calculator" className="nav-dropdown-item" onClick={() => setOpenMenu(null)}>
+                  <span className="nav-dropdown-icon">📈</span>
+                  <div>
+                    <div className="nav-dropdown-label">P/L Calculator</div>
+                    <div className="nav-dropdown-sub">Calculate your Trading Profit & Loss</div>
                   </div>
                 </Link>
               </div>

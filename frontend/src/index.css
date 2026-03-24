@@ -1052,20 +1052,22 @@ body::before {
 /* ── Compounding Calculator ──────────────────────────────── */
 .comp-page {
   min-height: 100vh;
-  background: var(--bg);
   color: var(--text);
 }
 .comp-header {
-  max-width: 860px;
-  margin: 0 auto;
+  width: 100%;
   padding: 56px 32px 32px;
   text-align: center;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
 }
 .comp-title {
   font-family: 'DM Serif Display', serif;
-  font-size: clamp(28px, 4vw, 44px);
+  font-size: clamp(20px, 2.8vw, 31px);
   letter-spacing: -.5px;
-  margin: 8px 0 12px;
+  margin: 8px auto 12px;
+  text-align: center;
+  max-width: 860px;
 }
 .comp-subtitle {
   font-size: 15px;
@@ -1073,6 +1075,7 @@ body::before {
   line-height: 1.6;
   max-width: 620px;
   margin: 0 auto;
+  text-align: center;
 }
 .comp-body {
   display: grid;
@@ -1080,7 +1083,7 @@ body::before {
   gap: 28px;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 32px 72px;
+  padding: 2.5rem 32px 72px;
   align-items: start;
 }
 .comp-inputs {
@@ -1380,20 +1383,22 @@ body::before {
 /* ── Budget Planner ──────────────────────────────────────── */
 .budget-page {
   min-height: 100vh;
-  background: var(--bg);
   color: var(--text);
 }
 .budget-header {
-  max-width: 860px;
-  margin: 0 auto;
+  width: 100%;
   padding: 56px 32px 32px;
   text-align: center;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
 }
 .budget-title {
   font-family: 'DM Serif Display', serif;
-  font-size: clamp(28px, 4vw, 44px);
+  font-size: clamp(20px, 2.8vw, 31px);
   letter-spacing: -.5px;
-  margin: 8px 0 12px;
+  margin: 8px auto 12px;
+  text-align: center;
+  max-width: 860px;
 }
 .budget-subtitle {
   font-size: 15px;
@@ -1401,6 +1406,7 @@ body::before {
   line-height: 1.6;
   max-width: 640px;
   margin: 0 auto;
+  text-align: center;
 }
 .budget-body {
   display: grid;
@@ -1408,7 +1414,7 @@ body::before {
   gap: 24px;
   max-width: 1280px;
   margin: 0 auto;
-  padding: 0 32px 72px;
+  padding: 2.5rem 32px 72px;
   align-items: start;
 }
 .budget-inputs-col,
@@ -1843,20 +1849,22 @@ body::before {
 /* ── Pay Calculator ──────────────────────────────────────── */
 .pay-page {
   min-height: 100vh;
-  background: var(--bg);
   color: var(--text);
 }
 .pay-header {
-  max-width: 860px;
-  margin: 0 auto;
+  width: 100%;
   padding: 56px 32px 32px;
   text-align: center;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
 }
 .pay-title {
   font-family: 'DM Serif Display', serif;
-  font-size: clamp(28px, 4vw, 44px);
+  font-size: clamp(20px, 2.8vw, 31px);
   letter-spacing: -.5px;
-  margin: 8px 0 12px;
+  margin: 8px auto 12px;
+  text-align: center;
+  max-width: 860px;
 }
 .pay-subtitle {
   font-size: 15px;
@@ -1864,6 +1872,7 @@ body::before {
   line-height: 1.6;
   max-width: 620px;
   margin: 0 auto;
+  text-align: center;
 }
 .pay-body {
   display: grid;
@@ -1871,7 +1880,7 @@ body::before {
   gap: 28px;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 32px 72px;
+  padding: 2.5rem 32px 72px;
   align-items: start;
 }
 .pay-inputs {
@@ -2276,13 +2285,35 @@ body::before {
 
 /* ── Admin page ──────────────────────────────────────────── */
 .admin-page {
-  max-width: 1040px;
-  margin: 2rem auto;
-  padding: 0 2rem 4rem;
+  min-height: 100vh;
 }
-.admin-header { margin-bottom: 1.5rem; }
-.admin-header h1 { font-size: 1.8rem; font-weight: 500; color: var(--text); }
-.welcome { color: var(--text2); margin-top: .3rem; font-size: .9rem; }
+.admin-hero {
+  width: 100%;
+  padding: 56px 32px 32px;
+  text-align: center;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+.admin-hero-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(20px, 2.8vw, 31px);
+  letter-spacing: -0.5px;
+  margin: 8px auto 12px;
+  text-align: center;
+  color: var(--text);
+}
+.admin-hero-sub {
+  font-size: 15px;
+  color: var(--text2);
+  line-height: 1.6;
+  margin: 0 auto;
+  text-align: center;
+}
+.admin-body {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 2.5rem 2rem 4rem;
+}
 .refresh-btn { margin-bottom: 2rem; }
 
 .stats-grid {
@@ -2476,13 +2507,14 @@ body::before {
   padding: 56px 32px 32px;
   text-align: center;
   background: var(--bg);
+  border-bottom: 1px solid var(--border);
 }
 
 .indicator-hero-inner { max-width: 640px; margin: 0 auto; }
 
 .indicator-hero-title {
   font-family: 'DM Serif Display', serif;
-  font-size: clamp(28px, 4vw, 44px);
+  font-size: clamp(20px, 2.8vw, 31px);
   letter-spacing: -0.5px;
   color: var(--text);
   margin: 8px 0 12px;
@@ -2689,14 +2721,15 @@ body::before {
 
 /* Hero */
 .plc-hero {
-  background: var(--bg);
   padding: 56px 32px 32px;
   text-align: center;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
 }
 .plc-hero-inner { max-width: 640px; margin: 0 auto; }
 .plc-hero-title {
   font-family: 'DM Serif Display', serif;
-  font-size: clamp(28px, 4vw, 44px);
+  font-size: clamp(20px, 2.8vw, 31px);
   letter-spacing: -0.5px;
   color: var(--text);
   margin: 8px 0 12px;
@@ -2967,6 +3000,13 @@ body::before {
   pointer-events: none;
 }
 .plc-input--prefixed { padding-left: 1.8rem; }
+.plc-input--error { border-color: #ef4444 !important; }
+.plc-input-error-msg {
+  display: block;
+  font-size: .78rem;
+  color: #ef4444;
+  margin-top: .3rem;
+}
 
 /* Breakdown rows */
 .plc-breakdown {
@@ -3140,18 +3180,18 @@ body::before {
    ============================================================ */
 .dca-page {
   min-height: 100vh;
-  background: var(--bg);
 }
 
 .dca-header {
   padding: 3.5rem 2rem 2.5rem;
   text-align: center;
   border-bottom: 1px solid var(--border);
+  background: var(--bg);
 }
 
 .dca-title {
   font-family: 'DM Serif Display', serif;
-  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-size: clamp(1.26rem, 2.8vw, 1.82rem);
   color: var(--text);
   margin: .5rem 0 1rem;
 }

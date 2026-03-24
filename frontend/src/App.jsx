@@ -12,8 +12,9 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 import { AuthProvider }  from './context/AuthContext';  // Global auth state wrapper
 import { ThemeProvider } from './context/ThemeContext'; // Light / dark theme
-import Navbar          from './components/Navbar';    // Navigation bar shown on every page
-import ProtectedRoute  from './components/ProtectedRoute'; // Guards admin routes
+import Navbar          from './components/Navbar';
+import Footer          from './components/Footer';
+import ProtectedRoute  from './components/ProtectedRoute';
 
 import PublicPage            from './pages/PublicPage';            // Accessible by everyone
 import LoginPage             from './pages/LoginPage';             // Login form for admins
@@ -39,14 +40,8 @@ export default function App() {
 
         <main className="main-content" style={{position:'relative',zIndex:1}}>
           <Routes>
-            {/* Public route — no auth required, anyone can visit */}
             <Route path="/"       element={<PublicPage />} />
-
-            {/* Login route — the form that issues a JWT on success */}
             <Route path="/login"  element={<LoginPage />} />
-
-            {/* Admin route — wrapped in ProtectedRoute which redirects
-                unauthenticated visitors to /login */}
             <Route
               path="/admin"
               element={
@@ -55,29 +50,16 @@ export default function App() {
                 </ProtectedRoute>
               }
             />
-
-            {/* Trading Indicators educational guide */}
-            <Route path="/indicators" element={<TradingIndicatorPage />} />
-
-            {/* Profit/Loss Calculator */}
-            <Route path="/calculator" element={<ProfitLossPage />} />
-
-            {/* Australian Pay Calculator */}
-            <Route path="/pay-calculator" element={<PayCalculatorPage />} />
-
-            {/* Money Compounding Calculator */}
+            <Route path="/indicators"             element={<TradingIndicatorPage />} />
+            <Route path="/calculator"             element={<ProfitLossPage />} />
+            <Route path="/pay-calculator"         element={<PayCalculatorPage />} />
             <Route path="/compounding-calculator" element={<CompoundingCalculatorPage />} />
-
-            {/* Budget Planner */}
-            <Route path="/budget" element={<BudgetToolPage />} />
-
-            {/* Dollar Cost Averaging Calculator */}
-            <Route path="/dca-calculator" element={<DCACalculatorPage />} />
-
-            {/* Catch-all: redirect any unknown URL back to the home page */}
-            <Route path="*" element={<Navigate to="/" replace />} />
+            <Route path="/budget"                 element={<BudgetToolPage />} />
+            <Route path="/dca-calculator"         element={<DCACalculatorPage />} />
+            <Route path="*"                       element={<Navigate to="/" replace />} />
           </Routes>
         </main>
+        <Footer />
       </BrowserRouter>
     </AuthProvider>
     </ThemeProvider>

@@ -331,7 +331,7 @@ export default function DCACalculatorPage() {
         <div className="section-eyebrow">ASX Trading &amp; Investing</div>
         <h1 className="dca-title">Dollar Cost Averaging Calculator</h1>
         <p className="dca-subtitle">
-          See how regular investing into any ASX stock would have grown using real historical prices.
+          See how regular investing into any ASX stock and ETFs would have grown using real historical prices.
           Enter your parameters and explore the power of consistent contributions over time.
         </p>
       </div>
@@ -342,9 +342,9 @@ export default function DCACalculatorPage() {
           <div className="dca-inputs-title">Parameters</div>
 
           <div className="dca-field">
-            <label className="dca-label">ASX Stock Code</label>
+            <label className="dca-label">Code</label>
             <TickerSearch value={ticker} onChange={setTicker} />
-            <div className="dca-field-hint">Type to search ASX-listed stocks</div>
+            <div className="dca-field-hint">Type to search ASX-listed stocks or ETFs</div>
           </div>
 
           <div className="dca-field">

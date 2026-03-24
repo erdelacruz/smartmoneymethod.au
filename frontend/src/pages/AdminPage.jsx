@@ -235,13 +235,16 @@ export default function AdminPage() {
   // Render
   // ---------------------------------------------------------------------------
   return (
-    <div className="page admin-page">
-      <div className="admin-header">
-        <h1>Admin Dashboard</h1>
-        {/* Display the logged-in admin's username from the auth context */}
-        <p className="welcome">Welcome, <strong>{user?.username}</strong></p>
+    <div className="admin-page">
+
+      {/* ── Hero Banner ── */}
+      <div className="admin-hero">
+        <div className="section-eyebrow">Administration</div>
+        <h1 className="admin-hero-title">Admin Dashboard</h1>
+        <p className="admin-hero-sub">Welcome back, <strong>{user?.username}</strong></p>
       </div>
 
+      <div className="admin-body">
       {/* Manual refresh button — useful when the admin wants instant stats */}
       <button className="btn-primary refresh-btn" onClick={fetchStats}>
         Refresh Stats
@@ -387,6 +390,7 @@ export default function AdminPage() {
           </p>
         </>
       )}
+      </div>
     </div>
   );
 }

@@ -110,7 +110,7 @@ function TradePanel({ side, shares, setShares, price, setPrice, customFee, setCu
     ? tradeValue + totalFees      // cost to buy
     : tradeValue - totalFees;     // proceeds from sell
 
-  const accentColor  = side === 'buy' ? 'var(--primary)' : 'var(--success)';
+  const accentColor  = side === 'buy' ? '#22c55e' : '#f97316';
   const label        = side === 'buy' ? 'Buy' : 'Sell';
 
   return (
@@ -333,8 +333,8 @@ export default function ProfitLossPage() {
 
           {/* BUY PANEL */}
           <div className="plc-panel">
-            <div className="plc-panel-header" style={{ borderColor: 'var(--primary)' }}>
-              <span className="plc-panel-badge" style={{ background: 'rgba(55,138,221,0.15)', color: 'var(--primary)' }}>
+            <div className="plc-panel-header" style={{ borderColor: '#22c55e' }}>
+              <span className="plc-panel-badge" style={{ background: 'rgba(34,197,94,0.15)', color: '#22c55e' }}>
                 Buy
               </span>
               <span className="plc-panel-title">Buy Trade</span>
@@ -398,7 +398,7 @@ export default function ProfitLossPage() {
                   <div className="plc-divider" />
                   <div className="plc-row plc-row--highlight">
                     <span className="plc-row-label">Total Cost (Net Buy)</span>
-                    <span className="plc-row-value" style={{ color: 'var(--primary)' }}>${netCost.toFixed(2)}</span>
+                    <span className="plc-row-value" style={{ color: '#22c55e' }}>${netCost.toFixed(2)}</span>
                   </div>
                 </div>
               );
@@ -407,8 +407,8 @@ export default function ProfitLossPage() {
 
           {/* SELL PANEL */}
           <div className="plc-panel">
-            <div className="plc-panel-header" style={{ borderColor: 'var(--success)' }}>
-              <span className="plc-panel-badge" style={{ background: 'rgba(0,200,150,0.15)', color: 'var(--success)' }}>
+            <div className="plc-panel-header" style={{ borderColor: '#f97316' }}>
+              <span className="plc-panel-badge" style={{ background: 'rgba(249,115,22,0.15)', color: '#f97316' }}>
                 Sell
               </span>
               <span className="plc-panel-title">Sell Trade</span>
@@ -417,9 +417,16 @@ export default function ProfitLossPage() {
             <div className="plc-inputs">
               <div className="plc-input-group">
                 <label className="plc-label">Number of Shares</label>
-                <input type="number" className="plc-input" placeholder="e.g. 500"
-                  min="0" value={sellShares}
+                <input type="number"
+                  className={`plc-input${sellShares !== '' && buyShares !== '' && Number(sellShares) > Number(buyShares) ? ' plc-input--error' : ''}`}
+                  placeholder="e.g. 500"
+                  min="0"
+                  max={buyShares !== '' ? buyShares : undefined}
+                  value={sellShares}
                   onChange={e => setSellShares(e.target.value === '' ? '' : Math.max(0, Number(e.target.value)))} />
+                {sellShares !== '' && buyShares !== '' && Number(sellShares) > Number(buyShares) && (
+                  <span className="plc-input-error-msg">Cannot exceed bought shares ({Number(buyShares).toLocaleString()})</span>
+                )}
               </div>
               <div className="plc-input-group">
                 <label className="plc-label">Sell Price per Share (AUD)</label>
@@ -472,7 +479,7 @@ export default function ProfitLossPage() {
                   <div className="plc-divider" />
                   <div className="plc-row plc-row--highlight">
                     <span className="plc-row-label">Net Proceeds (Net Sell)</span>
-                    <span className="plc-row-value" style={{ color: 'var(--success)' }}>${netProc.toFixed(2)}</span>
+                    <span className="plc-row-value" style={{ color: '#f97316' }}>${netProc.toFixed(2)}</span>
                   </div>
                 </div>
               );
