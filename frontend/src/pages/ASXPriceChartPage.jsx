@@ -60,7 +60,7 @@ export default function ASXPriceChartPage() {
     <div className="asx-chart-page">
 
       {/* ── PAGE HERO ── */}
-      <div className="asx-chart-hero">
+      <div className="asx-chart-hero page-hero">
         <div className="asx-chart-hero-inner">
           <div className="section-eyebrow">Trading Tools</div>
           <h1 className="asx-chart-title">Price Chart</h1>

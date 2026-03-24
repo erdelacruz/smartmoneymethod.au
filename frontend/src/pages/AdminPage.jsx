@@ -238,7 +238,7 @@ export default function AdminPage() {
     <div className="admin-page">
 
       {/* ── Hero Banner ── */}
-      <div className="admin-hero">
+      <div className="admin-hero page-hero">
         <div className="section-eyebrow">Administration</div>
         <h1 className="admin-hero-title">Admin Dashboard</h1>
         <p className="admin-hero-sub">Welcome back, <strong>{user?.username}</strong></p>

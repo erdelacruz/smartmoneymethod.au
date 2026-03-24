@@ -421,9 +421,9 @@ export default function TradingIndicatorPage() {
   const tab = TABS.find(t => t.id === activeTab);
 
   return (
-    <div>
+    <div className="indicator-page">
       {/* ── PAGE HERO ─────────────────────────────────────────── */}
-      <div className="indicator-hero">
+      <div className="indicator-hero page-hero">
         <div className="indicator-hero-inner">
           <div className="section-eyebrow">Technical Analysis</div>
           <h1 className="indicator-hero-title">Trading Indicators</h1>

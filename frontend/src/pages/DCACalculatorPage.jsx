@@ -327,7 +327,7 @@ export default function DCACalculatorPage() {
 
   return (
     <div className="dca-page">
-      <div className="dca-header">
+      <div className="dca-header page-hero">
         <div className="section-eyebrow">ASX Trading &amp; Investing</div>
         <h1 className="dca-title">Dollar Cost Averaging Calculator</h1>
         <p className="dca-subtitle">

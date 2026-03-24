@@ -1052,16 +1052,32 @@ body::before {
 .cta-actions { display: flex; flex-direction: column; gap: 12px; flex-shrink: 0; }
 .cta-note { font-size: 12px; color: var(--muted); text-align: center; }
 
+/* ── Shared hero background pattern (all non-home pages) ── */
+.page-hero {
+  background-color: var(--surface);
+  background-image:
+    linear-gradient(var(--hero-grid, rgba(212,160,23,0.03)) 1px, transparent 1px),
+    linear-gradient(90deg, var(--hero-grid, rgba(212,160,23,0.03)) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+[data-theme="light"] .page-hero {
+  --hero-grid: rgba(0,0,0,0.04);
+  background-color: #F4F6FA;
+}
+
 /* ── Compounding Calculator ──────────────────────────────── */
 .comp-page {
   min-height: 100vh;
   color: var(--text);
+  background: var(--bg);
+  position: relative;
+  z-index: 1;
 }
 .comp-header {
   width: 100%;
   padding: 28px 32px 16px;
   text-align: center;
-  background: var(--bg);
   border-bottom: 1px solid var(--border);
 }
 .comp-title {
@@ -1245,7 +1261,8 @@ body::before {
   align-items: flex-end;
   gap: 4px;
   height: 180px;
-  padding-bottom: 24px;
+  padding-bottom: 28px;
+  margin-bottom: 8px;
   position: relative;
 }
 .comp-bar-col {
@@ -1302,10 +1319,14 @@ body::before {
 }
 .comp-bar-xlabel {
   position: absolute;
-  bottom: 0;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
   font-size: 10px;
-  color: var(--muted);
+  font-weight: 600;
+  color: var(--text2);
   white-space: nowrap;
+  line-height: 1;
 }
 .comp-chart-legend {
   display: flex;
@@ -1387,12 +1408,14 @@ body::before {
 .budget-page {
   min-height: 100vh;
   color: var(--text);
+  background: var(--bg);
+  position: relative;
+  z-index: 1;
 }
 .budget-header {
   width: 100%;
   padding: 28px 32px 16px;
   text-align: center;
-  background: var(--bg);
   border-bottom: 1px solid var(--border);
 }
 .budget-title {
@@ -1853,12 +1876,14 @@ body::before {
 .pay-page {
   min-height: 100vh;
   color: var(--text);
+  background: var(--bg);
+  position: relative;
+  z-index: 1;
 }
 .pay-header {
   width: 100%;
   padding: 28px 32px 16px;
   text-align: center;
-  background: var(--bg);
   border-bottom: 1px solid var(--border);
 }
 .pay-title {
@@ -2289,12 +2314,14 @@ body::before {
 /* ── Admin page ──────────────────────────────────────────── */
 .admin-page {
   min-height: 100vh;
+  background: var(--bg);
+  position: relative;
+  z-index: 1;
 }
 .admin-hero {
   width: 100%;
   padding: 28px 32px 16px;
   text-align: center;
-  background: var(--bg);
   border-bottom: 1px solid var(--border);
 }
 .admin-hero-title {
@@ -2316,6 +2343,9 @@ body::before {
   max-width: 1040px;
   margin: 0 auto;
   padding: 2.5rem 2rem 4rem;
+  background: var(--bg);
+  position: relative;
+  z-index: 1;
 }
 .refresh-btn { margin-bottom: 2rem; }
 
@@ -2506,10 +2536,16 @@ body::before {
 
 /* ── Trading Indicator Page ──────────────────────────────── */
 
+.indicator-page {
+  min-height: 100vh;
+  background: var(--bg);
+  position: relative;
+  z-index: 1;
+}
+
 .indicator-hero {
   padding: 28px 32px 16px;
   text-align: center;
-  background: var(--bg);
   border-bottom: 1px solid var(--border);
 }
 
@@ -2588,6 +2624,10 @@ body::before {
   max-width: 1060px;
   margin: 0 auto;
   padding: 48px 2.5rem 80px;
+  background: var(--bg);
+  position: relative;
+  z-index: 1;
+  width: 100%;
 }
 
 /* TradingView live chart widget */
@@ -2596,6 +2636,7 @@ body::before {
   border: 1px solid var(--border);
   border-radius: 12px;
   overflow: hidden;
+  background: var(--surface);
 }
 .tv-widget-header {
   display: flex;
@@ -2824,7 +2865,6 @@ body::before {
 .asx-chart-hero {
   padding: 28px 32px 12px;
   text-align: center;
-  background: var(--bg);
   border-bottom: 1px solid var(--border);
 }
 .asx-chart-hero-inner { max-width: 640px; margin: 0 auto; }
@@ -2923,18 +2963,23 @@ body::before {
 }
 
 /* ============================================================
-   Screener Page
+   Charts & Screener Page (combined)
    ============================================================ */
-.screener-page { min-height: 100vh; }
+.charts-page {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 56px); /* subtract navbar height */
+  position: relative;
+  z-index: 1;
+}
 
-.screener-hero {
+.charts-hero {
   padding: 28px 32px 16px;
   text-align: center;
-  background: var(--bg);
   border-bottom: 1px solid var(--border);
 }
-.screener-hero-inner { max-width: 640px; margin: 0 auto; }
-.screener-title {
+.charts-hero-inner { max-width: 640px; margin: 0 auto; }
+.charts-hero-title {
   font-family: 'DM Serif Display', serif;
   font-size: clamp(20px, 2.8vw, 31px);
   letter-spacing: -0.5px;
@@ -2943,7 +2988,7 @@ body::before {
   text-align: center;
   line-height: 1.15;
 }
-.screener-sub {
+.charts-hero-sub {
   font-size: 15px;
   color: var(--text2);
   line-height: 1.6;
@@ -2951,24 +2996,82 @@ body::before {
   margin: 0 auto;
 }
 
-.screener-body {
+.charts-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--bg);
+  position: relative;
+  z-index: 1;
+}
+
+.charts-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   width: 90%;
   max-width: 1600px;
   margin: 0 auto;
-  padding: 1.5rem 2rem 4rem;
+  padding: 1rem 0 2rem;
+  min-height: 0; /* allow flex child to shrink below content size */
 }
 
-.screener-widget-container {
-  height: 700px;
+.charts-tab-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.charts-tab-body .tv-widget-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-top: 0;
+  min-height: 0;
+}
+
+.charts-tab-body .tv-widget-header {
+  flex-shrink: 0;
+}
+
+.charts-tv-container {
+  flex: 1;
+  width: 100%;
+  height: 100% !important; /* override .tv-widget-container fixed 500px */
+  min-height: 400px;
+  background: var(--surface);
+}
+.charts-tv-container.tradingview-widget-container {
+  flex: 1;
+  width: 100%;
+  height: 100% !important;
+  min-height: 400px;
+  background: var(--surface);
+}
+.charts-tv-container .tradingview-widget-container__widget,
+.charts-tv-container iframe {
+  height: 100% !important;
+  width: 100% !important;
+  min-height: 400px;
+  background: var(--surface);
 }
 
 /* ============================================================ */
+
+/* Page root */
+.plc-wrapper {
+  min-height: 100vh;
+  background: var(--bg);
+  position: relative;
+  z-index: 1;
+}
 
 /* Hero */
 .plc-hero {
   padding: 28px 32px 16px;
   text-align: center;
-  background: var(--bg);
   border-bottom: 1px solid var(--border);
 }
 .plc-hero-inner { max-width: 640px; margin: 0 auto; }
@@ -3425,13 +3528,15 @@ body::before {
    ============================================================ */
 .dca-page {
   min-height: 100vh;
+  background: var(--bg);
+  position: relative;
+  z-index: 1;
 }
 
 .dca-header {
   padding: 1.75rem 2rem 1.25rem;
   text-align: center;
   border-bottom: 1px solid var(--border);
-  background: var(--bg);
 }
 
 .dca-title {

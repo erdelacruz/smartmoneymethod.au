@@ -77,7 +77,7 @@ export default function CompoundingCalculatorPage() {
   return (
     <div className="comp-page">
       {/* Header */}
-      <div className="comp-header">
+      <div className="comp-header page-hero">
         <div className="section-eyebrow">Financial Tools</div>
         <h1 className="comp-title">Money Compounding Calculator</h1>
         <p className="comp-subtitle">

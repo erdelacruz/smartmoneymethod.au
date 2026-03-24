@@ -5,67 +5,93 @@
 //   BrowserRouter  — enables URL-based navigation using the History API
 //   Routes         — container that renders the first matching <Route>
 //   Route          — maps a URL path to a component
+//
+// ChartsPage is rendered outside <Routes> and kept always mounted so
+// the TradingView screener iframe is never destroyed — preserving filters
+// when the user navigates to other pages and comes back.
 // ============================================================
 
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 
-import { AuthProvider }  from './context/AuthContext';  // Global auth state wrapper
-import { ThemeProvider } from './context/ThemeContext'; // Light / dark theme
+import { AuthProvider }  from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import Navbar          from './components/Navbar';
 import Footer          from './components/Footer';
 import ProtectedRoute  from './components/ProtectedRoute';
 
-import PublicPage            from './pages/PublicPage';            // Accessible by everyone
-import LoginPage             from './pages/LoginPage';             // Login form for admins
-import AdminPage             from './pages/AdminPage';             // Only accessible when authenticated
-import TradingIndicatorPage  from './pages/TradingIndicatorPage';  // Trading indicators guide
-import ProfitLossPage        from './pages/ProfitLossPage';         // Profit/Loss calculator
-import PayCalculatorPage          from './pages/PayCalculatorPage';           // Australian Pay Calculator
-import CompoundingCalculatorPage  from './pages/CompoundingCalculatorPage';  // Money Compounding Calculator
-import BudgetToolPage            from './pages/BudgetToolPage';              // Budget Planner
-import DCACalculatorPage         from './pages/DCACalculatorPage';           // Dollar Cost Averaging Calculator
-import ASXPriceChartPage        from './pages/ASXPriceChartPage';            // Live ASX Price Chart
-import ScreenerPage             from './pages/ScreenerPage';                  // ASX Stock Screener
+import PublicPage            from './pages/PublicPage';
+import LoginPage             from './pages/LoginPage';
+import AdminPage             from './pages/AdminPage';
+import TradingIndicatorPage  from './pages/TradingIndicatorPage';
+import ProfitLossPage        from './pages/ProfitLossPage';
+import PayCalculatorPage          from './pages/PayCalculatorPage';
+import CompoundingCalculatorPage  from './pages/CompoundingCalculatorPage';
+import BudgetToolPage            from './pages/BudgetToolPage';
+import DCACalculatorPage         from './pages/DCACalculatorPage';
+import ChartsPage               from './pages/ChartsPage';
+
+// ---------------------------------------------------------------------------
+// Inner app — needs useLocation so must live inside BrowserRouter
+// ---------------------------------------------------------------------------
+function AppInner() {
+  const location = useLocation();
+  const isCharts = location.pathname === '/charts';
+
+  return (
+    <>
+      <Navbar />
+
+      {/* ChartsPage is always mounted (never unmounted) so the TradingView
+          screener iframe stays alive and preserves filter state across
+          navigation. CSS display controls visibility. */}
+      <div style={{ display: isCharts ? 'block' : 'none' }}>
+        <ChartsPage isVisible={isCharts} />
+      </div>
+
+      <main
+        className="main-content"
+        style={{ position: 'relative', zIndex: 1, display: isCharts ? 'none' : 'block' }}
+      >
+        <Routes>
+          <Route path="/"       element={<PublicPage />} />
+          <Route path="/login"  element={<LoginPage />} />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <AdminPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/indicators"             element={<TradingIndicatorPage />} />
+          <Route path="/calculator"             element={<ProfitLossPage />} />
+          <Route path="/pay-calculator"         element={<PayCalculatorPage />} />
+          <Route path="/compounding-calculator" element={<CompoundingCalculatorPage />} />
+          <Route path="/budget"                 element={<BudgetToolPage />} />
+          <Route path="/dca-calculator"         element={<DCACalculatorPage />} />
+          {/* Charts route: handled by always-mounted ChartsPage above */}
+          <Route path="/charts"                 element={null} />
+          {/* Legacy redirects */}
+          <Route path="/asx-chart"              element={<Navigate to="/charts" replace />} />
+          <Route path="/screener"               element={<Navigate to="/charts" replace />} />
+          <Route path="*"                       element={<Navigate to="/" replace />} />
+        </Routes>
+      </main>
+
+      <Footer />
+    </>
+  );
+}
 
 export default function App() {
   return (
-    // AuthProvider wraps everything so every component in the tree can
-    // call useAuth() to get user/token/login/logout
     <ThemeProvider>
-    <AuthProvider>
-      {/* BrowserRouter enables client-side routing.
-          It listens to the browser's URL bar and re-renders without full page reloads. */}
-      <BrowserRouter>
-        {/* Navbar sits outside Routes so it renders on every page */}
-        <Navbar />
-
-        <main className="main-content" style={{position:'relative',zIndex:1}}>
-          <Routes>
-            <Route path="/"       element={<PublicPage />} />
-            <Route path="/login"  element={<LoginPage />} />
-            <Route
-              path="/admin"
-              element={
-                <ProtectedRoute>
-                  <AdminPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route path="/indicators"             element={<TradingIndicatorPage />} />
-            <Route path="/calculator"             element={<ProfitLossPage />} />
-            <Route path="/pay-calculator"         element={<PayCalculatorPage />} />
-            <Route path="/compounding-calculator" element={<CompoundingCalculatorPage />} />
-            <Route path="/budget"                 element={<BudgetToolPage />} />
-            <Route path="/dca-calculator"         element={<DCACalculatorPage />} />
-            <Route path="/asx-chart"              element={<ASXPriceChartPage />} />
-            <Route path="/screener"               element={<ScreenerPage />} />
-            <Route path="*"                       element={<Navigate to="/" replace />} />
-          </Routes>
-        </main>
-        <Footer />
-      </BrowserRouter>
-    </AuthProvider>
+      <AuthProvider>
+        <BrowserRouter>
+          <AppInner />
+        </BrowserRouter>
+      </AuthProvider>
     </ThemeProvider>
   );
 }

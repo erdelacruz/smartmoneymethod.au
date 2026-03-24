@@ -106,8 +106,7 @@ export default function Navbar() {
             )}
           </div>
 
-          <Link to="/asx-chart">Price Chart</Link>
-          <Link to="/screener">Screener</Link>
+          <Link to="/charts">Chart &amp; Screener</Link>
           <Link to="/pay-calculator">Pay Calculator</Link>
           <Link to="/compounding-calculator">Compounding Calculator</Link>
           <Link to="/budget">Budget Planner</Link>

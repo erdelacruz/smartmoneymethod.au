@@ -250,9 +250,9 @@ export default function ProfitLossPage() {
   };
 
   return (
-    <div>
+    <div className="plc-wrapper">
       {/* ── PAGE HERO ─────────────────────────────────────────── */}
-      <div className="plc-hero">
+      <div className="plc-hero page-hero">
         <div className="plc-hero-inner">
           <div className="section-eyebrow">ASX Tools</div>
           <h1 className="plc-hero-title">Profit / Loss Calculator</h1>

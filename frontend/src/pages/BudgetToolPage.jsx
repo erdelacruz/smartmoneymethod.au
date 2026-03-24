@@ -287,7 +287,7 @@ export default function BudgetToolPage() {
   return (
     <div className="budget-page">
       {/* Header */}
-      <div className="budget-header">
+      <div className="budget-header page-hero">
         <div className="section-eyebrow">Financial Tools</div>
         <h1 className="budget-title">Budget Planner</h1>
         <p className="budget-subtitle">
