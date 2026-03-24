@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
+import { useAuth } from '../context/AuthContext';
 
 // ---------------------------------------------------------------------------
 // Persist a visitor UUID in localStorage for backend tracking
@@ -82,6 +83,7 @@ function Sparkline({ data }) {
 // ---------------------------------------------------------------------------
 export default function PublicPage() {
   const { theme } = useTheme();
+  const { user } = useAuth();
   const [activeFilter, setActiveFilter] = useState('All');
   const [activeTab,    setActiveTab]    = useState('1W');
 
@@ -259,7 +261,17 @@ export default function PublicPage() {
             <a href="#" className="footer-link">Terms of Service</a>
             <a href="#" className="footer-link">Disclaimer</a>
           </div>
-          <span>Data provided for informational purposes only.</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span>Data provided for informational purposes only.</span>
+            {!user && (
+              <Link to="/login" className="footer-login-icon" aria-label="Login">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="8" r="4" />
+                  <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+                </svg>
+              </Link>
+            )}
+          </div>
         </div>
       </footer>
 

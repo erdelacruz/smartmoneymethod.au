@@ -14,8 +14,8 @@ import React, { useState, useMemo, useEffect, useRef, useCallback } from 'react'
 
 // ── Helpers ───────────────────────────────────────────────────
 const MONTHS     = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-const MONTH_NUMS = Array.from({ length: 12 }, (_, i) => i + 1);
-const YEAR_RANGE = Array.from({ length: 20 }, (_, i) => 2006 + i); // 2006–2025
+const MIN_YEAR   = 2006;
+const MAX_YEAR   = 2025;
 const fmt  = (n) => n.toLocaleString('en-AU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const fmtK = (n) => n >= 1_000_000 ? `$${(n/1_000_000).toFixed(2)}M` : n >= 1_000 ? `$${(n/1_000).toFixed(1)}K` : `$${fmt(n)}`;
 
@@ -39,6 +39,51 @@ function computeDCA(prices, initialInv, monthlyInv, annualIncrease) {
       dcaValue: dcaShares * p.close,
     };
   });
+}
+
+// ── Month-Year Picker ─────────────────────────────────────────
+function MonthYearPicker({ year, month, onChange }) {
+  const [open,     setOpen]     = useState(false);
+  const [viewYear, setViewYear] = useState(year);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  // Keep viewYear in sync when prop changes externally (e.g. presets)
+  useEffect(() => setViewYear(year), [year]);
+
+  const select = (m) => { onChange(viewYear, m); setOpen(false); };
+
+  return (
+    <div ref={ref} className="dca-mypicker-wrap">
+      <button className="dca-mypicker-btn" onClick={() => setOpen(v => !v)}>
+        <span>{MONTHS[month - 1]} {year}</span>
+        <span className="dca-mypicker-arrow">▾</span>
+      </button>
+      {open && (
+        <div className="dca-mypicker-dropdown">
+          <div className="dca-mypicker-nav">
+            <button onClick={() => setViewYear(y => Math.max(MIN_YEAR, y - 1))}>‹</button>
+            <span>{viewYear}</span>
+            <button onClick={() => setViewYear(y => Math.min(MAX_YEAR, y + 1))}>›</button>
+          </div>
+          <div className="dca-mypicker-months">
+            {MONTHS.map((name, i) => (
+              <button
+                key={name}
+                className={`dca-mypicker-month${year === viewYear && month === i + 1 ? ' selected' : ''}`}
+                onClick={() => select(i + 1)}
+              >{name}</button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
 
 // ── Ticker Search Input ────────────────────────────────────────
@@ -334,25 +379,17 @@ export default function DCACalculatorPage() {
           <div className="dca-date-grid">
             <div className="dca-field">
               <label className="dca-label">Start Date</label>
-              <div className="dca-date-row">
-                <select className="dca-select" value={startMonth} onChange={e => setStartMonth(+e.target.value)}>
-                  {MONTH_NUMS.map((m, i) => <option key={m} value={m}>{MONTHS[i]}</option>)}
-                </select>
-                <select className="dca-select" value={startYear} onChange={e => setStartYear(+e.target.value)}>
-                  {YEAR_RANGE.map(y => <option key={y} value={y}>{y}</option>)}
-                </select>
-              </div>
+              <MonthYearPicker
+                year={startYear} month={startMonth}
+                onChange={(y, m) => { setStartYear(y); setStartMonth(m); }}
+              />
             </div>
             <div className="dca-field">
               <label className="dca-label">End Date</label>
-              <div className="dca-date-row">
-                <select className="dca-select" value={endMonth} onChange={e => setEndMonth(+e.target.value)}>
-                  {MONTH_NUMS.map((m, i) => <option key={m} value={m}>{MONTHS[i]}</option>)}
-                </select>
-                <select className="dca-select" value={endYear} onChange={e => setEndYear(+e.target.value)}>
-                  {YEAR_RANGE.map(y => <option key={y} value={y}>{y}</option>)}
-                </select>
-              </div>
+              <MonthYearPicker
+                year={endYear} month={endMonth}
+                onChange={(y, m) => { setEndYear(y); setEndMonth(m); }}
+              />
             </div>
           </div>
 

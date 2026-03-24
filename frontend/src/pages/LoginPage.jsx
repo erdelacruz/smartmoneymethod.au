@@ -70,7 +70,7 @@ export default function LoginPage() {
   return (
     <div className="page login-page">
       <div className="login-box">
-        <h1>Admin Login</h1>
+        <h1>Login</h1>
 
         {/* Show the error banner only when there is an error message */}
         {error && <p className="error-banner">{error}</p>}

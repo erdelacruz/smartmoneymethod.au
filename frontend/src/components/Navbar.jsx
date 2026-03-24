@@ -62,7 +62,7 @@ export default function Navbar() {
             onMouseLeave={closeDropdown}
           >
             <button className="nav-dropdown-trigger">
-              ASX Trading &amp; Investing
+              Share Trading &amp; Investing
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style={{marginLeft:4}}>
                 <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
@@ -87,7 +87,7 @@ export default function Navbar() {
                   <span className="nav-dropdown-icon">📉</span>
                   <div>
                     <div className="nav-dropdown-label">Dollar Cost Averaging</div>
-                    <div className="nav-dropdown-sub">Simulate DCA vs lump-sum investing</div>
+                    <div className="nav-dropdown-sub">Simulate dollar cost averaging investing</div>
                   </div>
                 </Link>
               </div>
@@ -124,25 +124,13 @@ export default function Navbar() {
             </svg>
           )}
         </button>
-        {user ? (
-          // === Logged-in state ===
+        {user && (
           <>
-            {/* Link to the admin dashboard — only shown when authenticated */}
             <Link to="/admin">Admin Dashboard</Link>
-
-            {/* Logout button — displays the username so the user knows who is logged in */}
             <button className="btn-logout" onClick={handleLogout}>
               Logout ({user.username})
             </button>
           </>
-        ) : (
-          // === Logged-out state ===
-          <Link to="/login" className="nav-user-icon" aria-label="Login">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="8" r="4" />
-              <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
-            </svg>
-          </Link>
         )}
       </div>
     </nav>

@@ -17,32 +17,33 @@
 import React, { useState, useMemo } from 'react';
 
 // ---------------------------------------------------------------------------
-// 2024–25 ATO individual income tax brackets (resident)
+// 2025–26 ATO individual income tax brackets (Stage 3 rates)
+// Source: ato.gov.au/tax-rates-and-codes/tax-rates-for-individuals
 // ---------------------------------------------------------------------------
 const RESIDENT_BRACKETS = [
-  { min: 0,       max: 18_200,  base: 0,      rate: 0      },
-  { min: 18_201,  max: 45_000,  base: 0,      rate: 0.19   },
-  { min: 45_001,  max: 120_000, base: 5_092,  rate: 0.325  },
-  { min: 120_001, max: 180_000, base: 29_467, rate: 0.37   },
-  { min: 180_001, max: Infinity,base: 51_667, rate: 0.45   },
+  { min: 0,        max: 18_200,  base: 0,      rate: 0     },
+  { min: 18_201,   max: 45_000,  base: 0,      rate: 0.19  },
+  { min: 45_001,   max: 135_000, base: 5_092,  rate: 0.30  },
+  { min: 135_001,  max: 190_000, base: 32_092, rate: 0.37  },
+  { min: 190_001,  max: Infinity,base: 52_442, rate: 0.45  },
 ];
 
-// 2024–25 non-resident brackets
+// 2025–26 non-resident brackets (no tax-free threshold; first band stays 32.5%)
 const NON_RESIDENT_BRACKETS = [
-  { min: 0,       max: 120_000, base: 0,      rate: 0.325  },
-  { min: 120_001, max: 180_000, base: 39_000, rate: 0.37   },
-  { min: 180_001, max: Infinity,base: 61_200, rate: 0.45   },
+  { min: 0,        max: 135_000, base: 0,      rate: 0.325 },
+  { min: 135_001,  max: 190_000, base: 43_875, rate: 0.37  },
+  { min: 190_001,  max: Infinity,base: 64_225, rate: 0.45  },
 ];
 
 // Working holiday maker — first $45k at 15%, then resident rates above
 const WHM_BRACKETS = [
-  { min: 0,       max: 45_000,  base: 0,      rate: 0.15   },
-  { min: 45_001,  max: 120_000, base: 6_750,  rate: 0.325  },
-  { min: 120_001, max: 180_000, base: 31_125, rate: 0.37   },
-  { min: 180_001, max: Infinity,base: 53_325, rate: 0.45   },
+  { min: 0,        max: 45_000,  base: 0,      rate: 0.15  },
+  { min: 45_001,   max: 135_000, base: 6_750,  rate: 0.30  },
+  { min: 135_001,  max: 190_000, base: 33_750, rate: 0.37  },
+  { min: 190_001,  max: Infinity,base: 54_100, rate: 0.45  },
 ];
 
-// Low Income Tax Offset (LITO) — resident only
+// Low Income Tax Offset (LITO) — resident only, unchanged for 2025–26
 function calcLITO(income) {
   if (income <= 37_500) return 700;
   if (income <= 45_000) return 700 - (income - 37_500) * 0.05;
@@ -50,33 +51,33 @@ function calcLITO(income) {
   return 0;
 }
 
-// Low and Middle Income Tax Offset (LMITO) removed from 2022-23 onwards
-// Low Income Medicare Levy reduction threshold 2024-25
-const MEDICARE_RATE = 0.02;
-const MEDICARE_SHADE_IN_LOWER = 26_000;   // below this → no levy
-const MEDICARE_SHADE_IN_UPPER = 32_500;   // above this → full 2%
+// Medicare levy 2025–26: 2% above $32,500; shade-in from $26,000
+const MEDICARE_RATE             = 0.02;
+const MEDICARE_SHADE_IN_LOWER   = 26_000; // below this → no levy
+const MEDICARE_SHADE_IN_UPPER   = 32_500; // above this → full 2%
 
-// HECS/HELP repayment thresholds 2024-25
+// HECS/HELP compulsory repayment thresholds 2025–26 (indexed from 2025–26)
+// Minimum repayment income: $56,152
 const HECS_THRESHOLDS = [
-  { min: 0,        max: 54_435,  rate: 0      },
-  { min: 54_435,   max: 62_739,  rate: 0.01   },
-  { min: 62_739,   max: 66_529,  rate: 0.02   },
-  { min: 66_529,   max: 70_539,  rate: 0.025  },
-  { min: 70_539,   max: 74_980,  rate: 0.03   },
-  { min: 74_980,   max: 79_614,  rate: 0.035  },
-  { min: 79_614,   max: 84_627,  rate: 0.04   },
-  { min: 84_627,   max: 89_680,  rate: 0.045  },
-  { min: 89_680,   max: 95_062,  rate: 0.05   },
-  { min: 95_062,   max: 100_877, rate: 0.055  },
-  { min: 100_877,  max: 107_133, rate: 0.06   },
-  { min: 107_133,  max: 113_760, rate: 0.065  },
-  { min: 113_760,  max: 120_783, rate: 0.07   },
-  { min: 120_783,  max: 128_226, rate: 0.075  },
-  { min: 128_226,  max: 136_097, rate: 0.08   },
-  { min: 136_097,  max: 144_493, rate: 0.085  },
-  { min: 144_493,  max: 153_421, rate: 0.09   },
-  { min: 153_421,  max: 162_981, rate: 0.095  },
-  { min: 162_981,  max: Infinity,rate: 0.10   },
+  { min: 0,         rate: 0     },
+  { min: 56_152,    rate: 0.010 },
+  { min: 64_726,    rate: 0.020 },
+  { min: 68_622,    rate: 0.025 },
+  { min: 72_762,    rate: 0.030 },
+  { min: 77_344,    rate: 0.035 },
+  { min: 82_122,    rate: 0.040 },
+  { min: 87_287,    rate: 0.045 },
+  { min: 92_503,    rate: 0.050 },
+  { min: 98_053,    rate: 0.055 },
+  { min: 104_049,   rate: 0.060 },
+  { min: 110_512,   rate: 0.065 },
+  { min: 117_337,   rate: 0.070 },
+  { min: 124_588,   rate: 0.075 },
+  { min: 132_260,   rate: 0.080 },
+  { min: 140_381,   rate: 0.085 },
+  { min: 149_047,   rate: 0.090 },
+  { min: 158_256,   rate: 0.095 },
+  { min: 168_116,   rate: 0.100 },
 ];
 
 function calcTax(income, brackets) {
@@ -92,7 +93,6 @@ function calcMedicare(income, resident) {
   if (!resident) return 0;
   if (income <= MEDICARE_SHADE_IN_LOWER) return 0;
   if (income <= MEDICARE_SHADE_IN_UPPER) {
-    // shade-in: 10 cents for every dollar over lower threshold
     return (income - MEDICARE_SHADE_IN_LOWER) * 0.1;
   }
   return income * MEDICARE_RATE;
@@ -105,7 +105,7 @@ function calcHECS(income) {
   return 0;
 }
 
-const SUPER_RATE = 0.115; // 11.5% SGC 2024-25
+const DEFAULT_SUPER_RATE = 12; // 12% SGC from 1 July 2025 (2025–26)
 
 const FREQUENCIES = [
   { id: 'annual',      label: 'Annual',      perYear: 1       },
@@ -140,6 +140,7 @@ export default function PayCalculatorPage() {
   const [taxFreeThreshold, setTaxFreeThreshold] = useState(true);
   const [includeHECS, setIncludeHECS]   = useState(false);
   const [superInclusive, setSuperInclusive] = useState(false); // salary package or on-top
+  const [superRate,      setSuperRate]      = useState(String(DEFAULT_SUPER_RATE));
 
   const results = useMemo(() => {
     const raw = parseFloat(grossInput.replace(/,/g, '')) || 0;
@@ -152,14 +153,15 @@ export default function PayCalculatorPage() {
     const annualGross = raw * perYear;
 
     // Super
+    const superRateFrac = (parseFloat(superRate) || DEFAULT_SUPER_RATE) / 100;
     let annualSalary = annualGross;
     let superAmount = 0;
     if (superInclusive) {
       // salary packages super — gross already includes super
-      annualSalary = annualGross / (1 + SUPER_RATE);
+      annualSalary = annualGross / (1 + superRateFrac);
       superAmount  = annualGross - annualSalary;
     } else {
-      superAmount  = annualGross * SUPER_RATE;
+      superAmount  = annualGross * superRateFrac;
     }
 
     // Income tax
@@ -185,7 +187,7 @@ export default function PayCalculatorPage() {
     const netIncome = annualSalary - totalDeductions;
 
     return { annualGross, annualSalary, tax, medicare, hecs, superAmount, netIncome, totalDeductions };
-  }, [grossInput, frequency, hoursPerWeek, residency, taxFreeThreshold, includeHECS, superInclusive]);
+  }, [grossInput, frequency, hoursPerWeek, residency, taxFreeThreshold, includeHECS, superInclusive, superRate]);
 
   const activeTaxRate = results
     ? ((results.tax / results.annualSalary) * 100).toFixed(1)
@@ -197,7 +199,7 @@ export default function PayCalculatorPage() {
       <div className="pay-header">
         <div className="section-eyebrow">Financial Tools</div>
         <h1 className="pay-title">Australian Pay Calculator</h1>
-        <p className="pay-subtitle">Calculate your take-home pay after income tax, Medicare levy, HECS/HELP and super — based on 2024–25 ATO rates.</p>
+        <p className="pay-subtitle">Calculate your take-home pay after income tax, Medicare levy, HECS/HELP and super — based on 2025–26 ATO rates.</p>
       </div>
 
       <div className="pay-body">
@@ -303,11 +305,32 @@ export default function PayCalculatorPage() {
             </button>
           </div>
 
-          {/* Super */}
+          {/* Super rate */}
+          <div className="pay-field">
+            <label className="pay-label">Super Rate (SGC)</label>
+            <div className="pay-input-row">
+              <input
+                className="pay-input"
+                type="number"
+                min="0"
+                max="30"
+                step="0.5"
+                value={superRate}
+                onChange={e => setSuperRate(e.target.value)}
+                placeholder="12"
+              />
+              <span className="pay-suffix">%</span>
+            </div>
+            <div className="pay-field-hint" style={{ marginTop: 4, fontSize: '.75rem', color: 'var(--text2)' }}>
+              Default 12.0% SGC (2025–26)
+            </div>
+          </div>
+
+          {/* Super inclusive toggle */}
           <div className="pay-toggle-row">
             <div>
               <div className="pay-toggle-label">Super Inclusive (Salary Package)</div>
-              <div className="pay-toggle-sub">Off = super is paid on top of your gross; On = super is included in your gross</div>
+              <div className="pay-toggle-sub">Off = super paid on top of gross; On = super included in gross</div>
             </div>
             <button
               className={`pay-toggle${superInclusive ? ' on' : ''}`}
@@ -319,7 +342,7 @@ export default function PayCalculatorPage() {
 
           {/* Disclaimer */}
           <p className="pay-disclaimer">
-            Estimates based on 2024–25 ATO rates. Does not include state taxes, salary sacrifice, private health rebate, or other offsets. For personal advice speak to a registered tax agent.
+            Estimates based on 2025–26 ATO rates. Does not include state taxes, salary sacrifice, private health rebate, or other offsets. For personal advice speak to a registered tax agent.
           </p>
         </div>
 
@@ -366,7 +389,7 @@ export default function PayCalculatorPage() {
                 <div className="pay-divider" />
                 <ResultRow label="Net Income"       annual={results.netIncome}  color="var(--success)" bold />
                 <div className="pay-divider" />
-                <ResultRow label={`Super (${(SUPER_RATE*100).toFixed(1)}% SGC)`} annual={results.superAmount} color="var(--primary)" />
+                <ResultRow label={`Super (${(parseFloat(superRate) || DEFAULT_SUPER_RATE).toFixed(1)}% SGC)`} annual={results.superAmount} color="var(--primary)" />
               </div>
 
               {/* Tax breakdown bar */}

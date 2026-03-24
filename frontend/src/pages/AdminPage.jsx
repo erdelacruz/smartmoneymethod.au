@@ -14,7 +14,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 
 // ---------------------------------------------------------------------------
-// VisitTimeline — vertical bar chart bucketed by calendar month.
 //
 // X-axis: Jan → Dec (12 fixed bars)
 // Y-axis: visit count per month, auto-scaled
@@ -154,19 +153,13 @@ function VisitTimeline({ monthlyStats }) {
 }
 
 // ---------------------------------------------------------------------------
-// BreakdownBars — horizontal bar chart derived from recentVisits.
-// Groups visits by a given field (browser | os | country) and renders a
-// proportional bar for each distinct value, sorted by count descending.
+// BreakdownBars — horizontal bar chart from pre-aggregated { label: count } map.
 // ---------------------------------------------------------------------------
-function BreakdownBars({ visits, field }) {
-  const counts = {};
-  visits.forEach(v => {
-    const val = v[field] || 'Unknown';
-    counts[val] = (counts[val] || 0) + 1;
-  });
-
-  const entries = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+function BreakdownBars({ statsMap }) {
+  const entries = Object.entries(statsMap || {}).sort((a, b) => b[1] - a[1]);
   const max     = entries[0]?.[1] || 1;
+
+  if (!entries.length) return <p style={{ fontSize: '.8rem', color: '#8A94A6' }}>No data yet.</p>;
 
   return (
     <div className="breakdown-bars">
@@ -259,7 +252,7 @@ export default function AdminPage() {
           Four panels: activity timeline + three breakdown bar charts.
           All charts are pure SVG / CSS — no external library required.
       ──────────────────────────────────────────────────────────────────── */}
-      {stats && stats.monthlyStats && stats.recentVisits.length > 0 && (
+      {stats && stats.monthlyStats && stats.uniqueVisitors > 0 && (
         <div className="charts-section">
           <h2 className="charts-heading">Analytics Overview</h2>
           <div className="charts-grid">
@@ -273,19 +266,19 @@ export default function AdminPage() {
             {/* Browser breakdown */}
             <div className="chart-card">
               <p className="chart-title">Browsers</p>
-              <BreakdownBars visits={stats.recentVisits} field="browser" />
+              <BreakdownBars statsMap={stats.browserStats} />
             </div>
 
             {/* OS breakdown */}
             <div className="chart-card">
               <p className="chart-title">Operating Systems</p>
-              <BreakdownBars visits={stats.recentVisits} field="os" />
+              <BreakdownBars statsMap={stats.osStats} />
             </div>
 
             {/* Country breakdown */}
             <div className="chart-card">
               <p className="chart-title">Countries</p>
-              <BreakdownBars visits={stats.recentVisits} field="country" />
+              <BreakdownBars statsMap={stats.countryStats} />
             </div>
 
           </div>
@@ -337,7 +330,7 @@ export default function AdminPage() {
 
           {/* Recent activity feed */}
           <div className="recent-visits">
-            <h2>Recent Visits (last 10)</h2>
+            <h2>All Unique Visitors ({stats.recentVisits.length})</h2>
             {stats.recentVisits.length === 0 ? (
               <p className="no-data">No visits recorded yet. Go visit the public page!</p>
             ) : (
@@ -349,39 +342,38 @@ export default function AdminPage() {
                 */}
                 {stats.recentVisits.map((visit, index) => (
                   <li key={index} className="visit-item">
-                    {/* Left: visitor icon */}
                     <span className="visit-icon">👤</span>
 
-                    {/* Center: stacked timestamp + metadata row */}
                     <div className="visit-details">
-                      {/* Primary line — when the visit happened */}
-                      <span className="visit-time">
-                        {new Date(visit.timestamp).toLocaleString()}
-                      </span>
+                      <div className="visit-time-row">
+                        <span className="visit-time">
+                          First seen: {new Date(visit.firstSeen).toLocaleString()}
+                        </span>
+                        <span className="visit-time visit-lastseen">
+                          Last seen: {new Date(visit.lastSeen).toLocaleString()}
+                        </span>
+                      </div>
 
-                      {/* Secondary line — OS, browser, country as labelled chips */}
                       <div className="visit-meta">
-                        {/* 🖥️ OS — e.g. "Windows 10", "macOS 14", "Android 13" */}
                         <span className="meta-chip">
                           <span className="meta-icon">🖥️</span>
                           {visit.os || 'Unknown OS'}
                         </span>
-
-                        {/* 🌐 Browser — e.g. "Chrome 120", "Firefox 121", "Safari 17" */}
                         <span className="meta-chip">
                           <span className="meta-icon">🌐</span>
                           {visit.browser || 'Unknown Browser'}
                         </span>
-
-                        {/* 📍 Country — resolved from client IP via ip-api.com */}
                         <span className="meta-chip">
                           <span className="meta-icon">📍</span>
                           {visit.country || 'Unknown'}
                         </span>
+                        <span className="meta-chip meta-chip--visits">
+                          <span className="meta-icon">🔁</span>
+                          {visit.visitCount} {visit.visitCount === 1 ? 'visit' : 'visits'}
+                        </span>
                       </div>
                     </div>
 
-                    {/* Right: "Latest" badge only on the most recent entry (index 0) */}
                     {index === 0 && <span className="badge-new">Latest</span>}
                   </li>
                 ))}
