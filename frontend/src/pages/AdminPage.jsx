@@ -257,7 +257,27 @@ export default function AdminPage() {
       ──────────────────────────────────────────────────────────────────── */}
       {stats && stats.monthlyStats && stats.uniqueVisitors > 0 && (
         <div className="charts-section">
-          <h2 className="charts-heading">Analytics Overview</h2>
+          {/* KPI cards */}
+          <div className="stats-grid">
+            <div className="stat-card">
+              <span className="stat-number">{stats.totalVisits}</span>
+              <span className="stat-label">Total Visits</span>
+              <p className="stat-desc">Every load of the public page, including return visitors.</p>
+            </div>
+            <div className="stat-card highlight">
+              <span className="stat-number">{stats.uniqueVisitors}</span>
+              <span className="stat-label">Unique Visitors</span>
+              <p className="stat-desc">Distinct browsers that have visited the public page.</p>
+            </div>
+            <div className="stat-card">
+              <span className="stat-number">
+                {stats.uniqueVisitors > 0 ? (stats.totalVisits / stats.uniqueVisitors).toFixed(1) : '0'}
+              </span>
+              <span className="stat-label">Visits / Visitor</span>
+              <p className="stat-desc">Average number of times each unique visitor has loaded the page.</p>
+            </div>
+          </div>
+
           <div className="charts-grid">
 
             {/* Visit Activity — smooth dual-line chart over bucketed time slots */}
@@ -297,40 +317,6 @@ export default function AdminPage() {
       {/* Stats section — only rendered once we have data */}
       {stats && (
         <>
-          {/* KPI cards — three key numbers side by side */}
-          <div className="stats-grid">
-            {/* Total page loads across all visitors */}
-            <div className="stat-card">
-              <span className="stat-number">{stats.totalVisits}</span>
-              <span className="stat-label">Total Visits</span>
-              <p className="stat-desc">
-                Every load of the public page, including return visitors.
-              </p>
-            </div>
-
-            {/* Count of distinct browser UUIDs — true unique visitors */}
-            <div className="stat-card highlight">
-              <span className="stat-number">{stats.uniqueVisitors}</span>
-              <span className="stat-label">Unique Visitors</span>
-              <p className="stat-desc">
-                Distinct browsers that have visited the public page.
-              </p>
-            </div>
-
-            {/* Derived metric: average visits per unique visitor */}
-            <div className="stat-card">
-              <span className="stat-number">
-                {stats.uniqueVisitors > 0
-                  ? (stats.totalVisits / stats.uniqueVisitors).toFixed(1)
-                  : '0'}
-              </span>
-              <span className="stat-label">Visits / Visitor</span>
-              <p className="stat-desc">
-                Average number of times each unique visitor has loaded the page.
-              </p>
-            </div>
-          </div>
-
           {/* Recent activity feed */}
           <div className="recent-visits">
             <h2>All Unique Visitors ({stats.recentVisits.length})</h2>
