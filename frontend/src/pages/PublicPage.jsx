@@ -222,6 +222,8 @@ export default function PublicPage() {
             { icon:'📋', title:'Budget Planner',           href:'/budget',                 desc:'Plan your monthly budget by tracking income and expenses across categories. Visualise where your money goes and find opportunities to save.' },
             { icon:'📊', title:'Compounding Calculator',   href:'/compounding-calculator', desc:'See the power of compound interest over time. Enter a starting amount, regular contributions, interest rate and time horizon to project your wealth.' },
             { icon:'📉', title:'DCA Calculator',           href:'/dca-calculator',         desc:'Simulate dollar cost averaging for any ASX stock. Enter regular contributions and see how your portfolio would have grown over time.' },
+            { icon:'🕯️', title:'ASX Price Chart',          href:'/asx-chart',              desc:'View a live interactive price chart for any ASX-listed stock or ETF. Search by ticker code and analyse price action powered by TradingView.' },
+            { icon:'🔍', title:'Stock Screener',           href:'/screener',               desc:'Screen ASX stocks and Australian ETFs by market cap, price, volume and more. Find opportunities using TradingView\'s live Australian market data.' },
           ].map(tool => (
             <div key={tool.title} className="tool-card">
               <div className="tool-icon">{tool.icon}</div>
