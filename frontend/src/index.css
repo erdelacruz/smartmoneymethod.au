@@ -3036,6 +3036,59 @@ body::before {
   flex-shrink: 0;
 }
 
+/* Custom symbol search row in Price Chart header */
+.chart-symbol-search {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--surface);
+}
+.chart-symbol-prefix {
+  padding: 0 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text2);
+  background: var(--bg3, var(--bg));
+  border-right: 1px solid var(--border);
+  white-space: nowrap;
+  line-height: 36px;
+}
+.chart-symbol-input {
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 0 10px;
+  width: 90px;
+  height: 36px;
+  letter-spacing: 0.5px;
+}
+.chart-symbol-btn {
+  border: none;
+  border-left: 1px solid var(--border);
+  background: var(--primary);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 0 16px;
+  height: 36px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.15s;
+}
+.chart-symbol-btn:hover { opacity: 0.85; }
+.chart-symbol-btn--clear {
+  background: var(--bg3, #e5e7eb);
+  color: var(--text2);
+  border-left: 1px solid var(--border);
+}
+[data-theme="dark"] .chart-symbol-btn--clear { background: var(--bg3, #1e2a38); }
+
 .charts-tv-container {
   flex: 1;
   width: 100%;

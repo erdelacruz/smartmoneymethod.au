@@ -15,11 +15,27 @@ const TABS = [
 ];
 
 // ---------------------------------------------------------------------------
-// Price Chart tab — TradingView Advanced Chart
+// Price Chart tab — TradingView Advanced Chart with custom symbol search
 // ---------------------------------------------------------------------------
 function PriceChartTab() {
   const containerRef = useRef(null);
   const { theme } = useTheme();
+  const [inputVal, setInputVal] = useState('BHP');
+  const [symbol,   setSymbol]   = useState('ASX:BHP');
+
+  const applySymbol = () => {
+    const val = inputVal.trim().toUpperCase();
+    // Only apply if 2–10 alphabetic characters (ASX code format)
+    if (/^[A-Z]{2,10}$/.test(val)) {
+      setSymbol(`ASX:${val}`);
+    } else {
+      setInputVal(symbol.replace('ASX:', '')); // revert to last valid
+    }
+  };
+
+  const handleKey = (e) => {
+    if (e.key === 'Enter') applySymbol();
+  };
 
   useEffect(() => {
     const container = containerRef.current;
@@ -38,18 +54,16 @@ function PriceChartTab() {
     script.async = true;
     script.innerHTML = JSON.stringify({
       autosize: true,
-      symbol: 'ASX:BHP',
+      symbol,
       interval: 'D',
       timezone: 'Australia/Sydney',
       theme: theme === 'light' ? 'light' : 'dark',
       style: '1',
       locale: 'en',
-      allow_symbol_change: true,
+      allow_symbol_change: false,
       save_image: true,
       hide_side_toolbar: false,
       calendar: false,
-      exchange: 'ASX',
-      country: 'AU',
       isTransparent: false,
       backgroundColor: theme === 'light' ? 'rgba(255, 255, 255, 1)' : 'rgba(11, 18, 25, 1)',
       support_host: 'https://www.tradingview.com',
@@ -57,15 +71,29 @@ function PriceChartTab() {
     container.appendChild(script);
 
     return () => { container.innerHTML = ''; };
-  }, [theme]);
+  }, [theme, symbol]);
 
   return (
     <div className="charts-tab-body">
       <div className="tv-widget-wrap">
         <div className="tv-widget-header">
+          <div className="chart-symbol-search">
+            <span className="chart-symbol-prefix">ASX:</span>
+            <input
+              className="chart-symbol-input"
+              value={inputVal}
+              onChange={e => setInputVal(e.target.value.toUpperCase())}
+              onKeyDown={handleKey}
+              placeholder="e.g. BHP"
+              maxLength={10}
+              spellCheck={false}
+            />
+            <button className="chart-symbol-btn" onClick={applySymbol}>Search</button>
+            <button className="chart-symbol-btn chart-symbol-btn--clear" onClick={() => setInputVal('')}>Clear</button>
+          </div>
           <div className="tv-widget-title-group">
             <span className="tv-widget-label">📈 Live Price Chart</span>
-            <span className="tv-widget-sub">Powered by TradingView · Search any symbol using the chart's built-in search box</span>
+            <span className="tv-widget-sub">Powered by TradingView · ASX Australia market</span>
           </div>
         </div>
         <div ref={containerRef} className="tradingview-widget-container charts-tv-container" />
@@ -139,7 +167,7 @@ function ScreenerTab({ isVisible }) {
     <div className="charts-tab-body">
       <div className="tv-widget-wrap">
         <div className="tv-widget-header">
-          <div className="tv-widget-title-group">
+          <div className="tv-widget-title-group" style={{ marginLeft: 'auto', textAlign: 'right' }}>
             <span className="tv-widget-label">🔍 ASX &amp; Australian ETF Screener</span>
             <span className="tv-widget-sub">Powered by TradingView · Australian market only</span>
           </div>
