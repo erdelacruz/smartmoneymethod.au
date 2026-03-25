@@ -17,6 +17,98 @@ function getOrCreateVisitorId() {
 }
 
 // ---------------------------------------------------------------------------
+// Hero trading chart — mini candlestick data (BHP.AX paper trade)
+// ---------------------------------------------------------------------------
+const TRADE_CANDLES = [
+  {o:112.20,h:113.10,l:111.80,c:112.90},{o:112.90,h:113.80,l:112.50,c:113.50},
+  {o:113.50,h:113.90,l:112.80,c:113.10},{o:113.10,h:114.20,l:112.90,c:114.00},
+  {o:114.00,h:114.80,l:113.60,c:114.60},{o:114.60,h:115.40,l:114.20,c:115.10},
+  {o:115.10,h:115.30,l:114.20,c:114.50},{o:114.50,h:115.20,l:114.10,c:115.00},
+  {o:115.00,h:116.00,l:114.80,c:115.70},{o:115.70,h:116.80,l:115.40,c:116.50},
+  {o:116.50,h:117.60,l:116.20,c:117.20},{o:117.20,h:117.80,l:116.50,c:116.90},
+  {o:116.90,h:117.50,l:116.60,c:117.10},{o:117.10,h:118.60,l:116.90,c:118.50},
+];
+
+function TradingMiniChart({ candles }) {
+  const W = 260, H = 100;
+  const PAD = { l: 4, r: 4, t: 6, b: 6 };
+  const cw = W - PAD.l - PAD.r, ch = H - PAD.t - PAD.b;
+  const allP = candles.flatMap(c => [c.h, c.l]);
+  const min = Math.min(...allP), max = Math.max(...allP), range = max - min || 1;
+  const n = candles.length, slotW = cw / n, bodyW = slotW * 0.55;
+  const yOf = v => PAD.t + ch - ((v - min) / range) * ch;
+  const cx  = i => PAD.l + i * slotW + slotW / 2;
+  const sma = candles.map((_, i) => {
+    if (i < 4) return null;
+    const avg = candles.slice(i - 4, i + 1).reduce((s, c) => s + c.c, 0) / 5;
+    return `${i === 4 ? 'M' : 'L'}${cx(i)},${yOf(avg)}`;
+  }).filter(Boolean).join(' ');
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: '100%', minHeight: 100 }}>
+      {[0.25, 0.5, 0.75].map(t => (
+        <line key={t} x1={PAD.l} y1={PAD.t + ch * (1 - t)} x2={W - PAD.r} y2={PAD.t + ch * (1 - t)}
+          stroke="rgba(138,155,176,0.15)" strokeWidth="0.8" />
+      ))}
+      <path d={sma} fill="none" stroke="rgba(212,160,23,0.75)" strokeWidth="1.3" />
+      {candles.map((c, i) => {
+        const up = c.c >= c.o, col = up ? '#00C896' : '#F04E4E';
+        const by = yOf(Math.max(c.o, c.c)), bh = Math.max(yOf(Math.min(c.o, c.c)) - by, 1);
+        return (
+          <g key={i}>
+            <line x1={cx(i)} y1={yOf(c.h)} x2={cx(i)} y2={yOf(c.l)} stroke={col} strokeWidth="0.9" />
+            <rect x={cx(i) - bodyW / 2} y={by} width={bodyW} height={bh} fill={col} rx="0.5" />
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Hero DCA chart — NDQ.AX monthly DCA simulation (Jan 2020 – Dec 2021)
+// ---------------------------------------------------------------------------
+const NDQ_DCA_DATA = [
+  {invested:1500, value:1520},{invested:2000, value:2100},{invested:2500, value:2750},
+  {invested:3000, value:3500},{invested:3500, value:4350},{invested:4000, value:5200},
+  {invested:4500, value:6400},{invested:5000, value:7300},{invested:5500, value:9600},
+  {invested:6000, value:11300},{invested:6500, value:13900},{invested:7000, value:15700},
+  {invested:7500, value:12100},{invested:8000, value:10600},{invested:8500, value:9900},
+  {invested:9000, value:10300},{invested:9500, value:12600},{invested:10000,value:15100},
+  {invested:10500,value:18200},{invested:11000,value:21200},{invested:11500,value:24700},
+  {invested:12000,value:27700},{invested:12500,value:30200},{invested:13000,value:33500},
+];
+
+function DCAMiniChart({ data }) {
+  const W = 260, H = 100;
+  const PAD = { l: 4, r: 4, t: 8, b: 8 };
+  const cw = W - PAD.l - PAD.r, ch = H - PAD.t - PAD.b;
+  const maxVal = Math.max(...data.map(d => Math.max(d.value, d.invested))) * 1.02;
+  const n = data.length;
+  const xOf = i => PAD.l + (i / (n - 1)) * cw;
+  const yOf = v => PAD.t + ch - (v / maxVal) * ch;
+  const valuePts    = data.map((d, i) => `${i === 0 ? 'M' : 'L'}${xOf(i)},${yOf(d.value)}`).join(' ');
+  const investedPts = data.map((d, i) => `${i === 0 ? 'M' : 'L'}${xOf(i)},${yOf(d.invested)}`).join(' ');
+  const areaPath    = `${valuePts} L${xOf(n-1)},${PAD.t+ch} L${xOf(0)},${PAD.t+ch} Z`;
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: '100%', minHeight: 100 }}>
+      <defs>
+        <linearGradient id="heroNdqGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"   stopColor="#D4A017" stopOpacity="0.22" />
+          <stop offset="100%" stopColor="#D4A017" stopOpacity="0.01" />
+        </linearGradient>
+      </defs>
+      {[0.25, 0.5, 0.75].map(t => (
+        <line key={t} x1={PAD.l} y1={PAD.t + ch*(1-t)} x2={W-PAD.r} y2={PAD.t + ch*(1-t)}
+          stroke="rgba(138,155,176,0.15)" strokeWidth="0.8" />
+      ))}
+      <path d={areaPath}    fill="url(#heroNdqGrad)" />
+      <path d={investedPts} fill="none" stroke="rgba(55,138,221,0.55)" strokeWidth="1.3" strokeDasharray="3,2" />
+      <path d={valuePts}    fill="none" stroke="#D4A017" strokeWidth="2" />
+    </svg>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Static data
 // ---------------------------------------------------------------------------
 const STOCKS = [
@@ -87,6 +179,12 @@ export default function PublicPage() {
 
   const [activeFilter, setActiveFilter] = useState('All');
   const [activeTab,    setActiveTab]    = useState('1W');
+  const [heroSlide,    setHeroSlide]    = useState(0); // 0 = savings, 1 = trading
+
+  useEffect(() => {
+    const id = setInterval(() => setHeroSlide(s => (s + 1) % 3), 3000);
+    return () => clearInterval(id);
+  }, []);
 
   // Record visit on mount — skip for logged-in admin users
   useEffect(() => {
@@ -124,90 +222,199 @@ export default function PublicPage() {
           </div>
 
           <div className="hero-visual">
-            {/* Floating badge — top right */}
+            {/* Floating badge — top right (context-aware) */}
             <div className="mini-card" style={{ top: '-20px', right: '-10px' }}>
-              <div className="mini-card-icon" style={{ background: 'rgba(0,200,150,0.12)' }}>💰</div>
-              <div className="mini-card-text">
-                <div className="mini-card-title">Interest earned</div>
-                <div className="mini-card-sub">$14,283 over 5 yrs</div>
-              </div>
+              {heroSlide === 0 ? (
+                <>
+                  <div className="mini-card-icon" style={{ background: 'rgba(0,200,150,0.12)' }}>💰</div>
+                  <div className="mini-card-text">
+                    <div className="mini-card-title">Interest earned</div>
+                    <div className="mini-card-sub">$14,283 over 5 yrs</div>
+                  </div>
+                </>
+              ) : heroSlide === 1 ? (
+                <>
+                  <div className="mini-card-icon" style={{ background: 'rgba(0,200,150,0.12)' }}>📈</div>
+                  <div className="mini-card-text">
+                    <div className="mini-card-title">Open position</div>
+                    <div className="mini-card-sub">CBA.AX · 20 shares</div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="mini-card-icon" style={{ background: 'rgba(55,138,221,0.12)' }}>📊</div>
+                  <div className="mini-card-text">
+                    <div className="mini-card-title">DCA gain</div>
+                    <div className="mini-card-sub">+$20,500 over 24 mo</div>
+                  </div>
+                </>
+              )}
             </div>
 
-            {/* Savings growth chart card */}
-            <div className="hero-chart-card">
-              <div className="chart-card-header">
-                <div>
-                  <div className="chart-stock-name">Savings Growth</div>
-                  <div className="chart-stock-sub">$500 / month · 5% p.a. interest</div>
+            {/* Slide container */}
+            <div className="hero-slides">
+              {/* ── Savings growth card ── */}
+              <div className={`hero-chart-card hero-slide${heroSlide === 0 ? ' hero-slide-active' : ' hero-slide-inactive'}`}>
+                <div className="chart-card-header">
+                  <div>
+                    <div className="chart-stock-name">Savings Growth</div>
+                    <div className="chart-stock-sub">$500 / month · 5% p.a. interest</div>
+                  </div>
+                  <div className="chart-price-block">
+                    <div className="chart-price">$44,283</div>
+                    <div className="chart-change">▲ after 5 years</div>
+                  </div>
                 </div>
-                <div className="chart-price-block">
-                  <div className="chart-price">$44,283</div>
-                  <div className="chart-change">▲ after 5 years</div>
+                <div className="savings-chart-years">
+                  {['Yr 1','Yr 2','Yr 3','Yr 4','Yr 5'].map(y => <span key={y}>{y}</span>)}
                 </div>
-              </div>
-
-              {/* Year labels row */}
-              <div className="savings-chart-years">
-                {['Yr 1','Yr 2','Yr 3','Yr 4','Yr 5'].map(y => (
-                  <span key={y}>{y}</span>
-                ))}
-              </div>
-
-              {/* Stacked bar chart — contributions vs interest */}
-              <div className="savings-chart-bars">
-                {[
-                  { contrib: 6000,  interest: 154   },
-                  { contrib: 12000, interest: 618   },
-                  { contrib: 18000, interest: 1400  },
-                  { contrib: 24000, interest: 2510  },
-                  { contrib: 30000, interest: 3871  },
-                ].map((d, i) => {
-                  const total   = d.contrib + d.interest;
-                  const maxVal  = 33871;
-                  const contPct = (d.contrib  / maxVal * 100).toFixed(1);
-                  const intPct  = (d.interest / maxVal * 100).toFixed(1);
-                  return (
-                    <div key={i} className="savings-bar-col">
-                      <div className="savings-bar-stack">
-                        <div className="savings-bar-interest" style={{ height: `${intPct}%` }} />
-                        <div className="savings-bar-contrib"  style={{ height: `${contPct}%` }} />
+                <div className="savings-chart-bars">
+                  {[
+                    { contrib: 6000,  interest: 154  },
+                    { contrib: 12000, interest: 618  },
+                    { contrib: 18000, interest: 1400 },
+                    { contrib: 24000, interest: 2510 },
+                    { contrib: 30000, interest: 3871 },
+                  ].map((d, i) => {
+                    const total = d.contrib + d.interest, maxVal = 33871;
+                    const contPct = (d.contrib  / maxVal * 100).toFixed(1);
+                    const intPct  = (d.interest / maxVal * 100).toFixed(1);
+                    return (
+                      <div key={i} className="savings-bar-col">
+                        <div className="savings-bar-stack">
+                          <div className="savings-bar-interest" style={{ height: `${intPct}%` }} />
+                          <div className="savings-bar-contrib"  style={{ height: `${contPct}%` }} />
+                        </div>
+                        <div className="savings-bar-val">${(total/1000).toFixed(0)}K</div>
                       </div>
-                      <div className="savings-bar-val">${(total/1000).toFixed(0)}K</div>
+                    );
+                  })}
+                </div>
+                <div className="savings-chart-footer">
+                  <div className="savings-chart-legend">
+                    <span><span className="savings-dot contrib" />Contributions</span>
+                    <span><span className="savings-dot interest" />Interest</span>
+                  </div>
+                  <div className="chart-mini-stats" style={{ marginTop: 0 }}>
+                    <div className="chart-mini-stat">
+                      <div className="chart-mini-stat-label">Deposited</div>
+                      <div className="chart-mini-stat-val">$30,000</div>
                     </div>
-                  );
-                })}
+                    <div className="chart-mini-stat">
+                      <div className="chart-mini-stat-label">Interest</div>
+                      <div className="chart-mini-stat-val" style={{ color:'var(--success)' }}>$14,283</div>
+                    </div>
+                    <div className="chart-mini-stat">
+                      <div className="chart-mini-stat-label">Rate</div>
+                      <div className="chart-mini-stat-val">5% p.a.</div>
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              {/* Legend + summary stats */}
-              <div className="savings-chart-footer">
-                <div className="savings-chart-legend">
-                  <span><span className="savings-dot contrib" />Contributions</span>
-                  <span><span className="savings-dot interest" />Interest</span>
+              {/* ── Trading chart card ── */}
+              <div className={`hero-chart-card hero-slide${heroSlide === 1 ? ' hero-slide-active' : ' hero-slide-inactive'}`}>
+                <div className="chart-card-header">
+                  <div>
+                    <div className="chart-stock-name">CBA.AX</div>
+                    <div className="chart-stock-sub">Commonwealth Bank · Entry $112.20</div>
+                  </div>
+                  <div className="chart-price-block">
+                    <div className="chart-price">$118.50</div>
+                    <div className="chart-change" style={{ color: 'var(--success)' }}>▲ +5.60%</div>
+                  </div>
+                </div>
+                <div className="hero-trade-chart-grow">
+                  <TradingMiniChart candles={TRADE_CANDLES} />
+                </div>
+                <div className="chart-mini-stats" style={{ marginTop: 10 }}>
+                  <div className="chart-mini-stat">
+                    <div className="chart-mini-stat-label">Entry</div>
+                    <div className="chart-mini-stat-val">$112.20</div>
+                  </div>
+                  <div className="chart-mini-stat">
+                    <div className="chart-mini-stat-label">P&amp;L</div>
+                    <div className="chart-mini-stat-val" style={{ color: 'var(--success)' }}>+$126</div>
+                  </div>
+                  <div className="chart-mini-stat">
+                    <div className="chart-mini-stat-label">Shares</div>
+                    <div className="chart-mini-stat-val">20</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* ── DCA NDQ card ── */}
+              <div className={`hero-chart-card hero-slide${heroSlide === 2 ? ' hero-slide-active' : ' hero-slide-inactive'}`}>
+                <div className="chart-card-header">
+                  <div>
+                    <div className="chart-stock-name">
+                      NDQ.AX <span className="hero-paper-badge" style={{ background: 'rgba(55,138,221,0.12)', color: '#378ADD' }}>DCA</span>
+                    </div>
+                    <div className="chart-stock-sub">Betashares Nasdaq 100 · $500/mo · 24 months</div>
+                  </div>
+                  <div className="chart-price-block">
+                    <div className="chart-price">$33,500</div>
+                    <div className="chart-change" style={{ color: 'var(--success)' }}>▲ +157.7%</div>
+                  </div>
+                </div>
+                <div className="hero-trade-chart-grow">
+                  <DCAMiniChart data={NDQ_DCA_DATA} />
+                </div>
+                <div className="savings-chart-legend" style={{ marginBottom: 8 }}>
+                  <span><span className="savings-dot" style={{ background:'#D4A017' }} />Portfolio Value</span>
+                  <span><span className="savings-dot" style={{ background:'rgba(55,138,221,0.8)' }} />Invested</span>
                 </div>
                 <div className="chart-mini-stats" style={{ marginTop: 0 }}>
                   <div className="chart-mini-stat">
-                    <div className="chart-mini-stat-label">Deposited</div>
-                    <div className="chart-mini-stat-val">$30,000</div>
+                    <div className="chart-mini-stat-label">Invested</div>
+                    <div className="chart-mini-stat-val">$13,000</div>
                   </div>
                   <div className="chart-mini-stat">
-                    <div className="chart-mini-stat-label">Interest</div>
-                    <div className="chart-mini-stat-val" style={{ color:'var(--success)' }}>$14,283</div>
+                    <div className="chart-mini-stat-label">Gain</div>
+                    <div className="chart-mini-stat-val" style={{ color: 'var(--success)' }}>+$20,500</div>
                   </div>
                   <div className="chart-mini-stat">
-                    <div className="chart-mini-stat-label">Rate</div>
-                    <div className="chart-mini-stat-val">5% p.a.</div>
+                    <div className="chart-mini-stat-label">Return</div>
+                    <div className="chart-mini-stat-val" style={{ color: 'var(--success)' }}>+157.7%</div>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Floating badge — bottom left */}
+            {/* Slide dots */}
+            <div className="hero-slide-dots">
+              <button className={heroSlide === 0 ? 'active' : ''} onClick={() => setHeroSlide(0)} />
+              <button className={heroSlide === 1 ? 'active' : ''} onClick={() => setHeroSlide(1)} />
+              <button className={heroSlide === 2 ? 'active' : ''} onClick={() => setHeroSlide(2)} />
+            </div>
+
+            {/* Floating badge — bottom left (context-aware) */}
             <div className="mini-card" style={{ bottom: '-16px', left: '-10px' }}>
-              <div className="mini-card-icon" style={{ background: 'rgba(212,160,23,0.12)' }}>🏦</div>
-              <div className="mini-card-text">
-                <div className="mini-card-title">Savings up 47.6%</div>
-                <div className="mini-card-sub">vs. no interest</div>
-              </div>
+              {heroSlide === 0 ? (
+                <>
+                  <div className="mini-card-icon" style={{ background: 'rgba(212,160,23,0.12)' }}>🏦</div>
+                  <div className="mini-card-text">
+                    <div className="mini-card-title">Savings up 47.6%</div>
+                    <div className="mini-card-sub">vs. no interest</div>
+                  </div>
+                </>
+              ) : heroSlide === 1 ? (
+                <>
+                  <div className="mini-card-icon" style={{ background: 'rgba(240,78,78,0.12)' }}>💹</div>
+                  <div className="mini-card-text">
+                    <div className="mini-card-title">Unrealised +$126</div>
+                    <div className="mini-card-sub">+5.60% on position</div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="mini-card-icon" style={{ background: 'rgba(212,160,23,0.12)' }}>🚀</div>
+                  <div className="mini-card-text">
+                    <div className="mini-card-title">NDQ up 157.7%</div>
+                    <div className="mini-card-sub">vs $13K invested</div>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -227,6 +434,7 @@ export default function PublicPage() {
             { icon:'📉', title:'DCA Calculator',           href:'/dca-calculator',         desc:'Simulate dollar cost averaging for any ASX stock. Enter regular contributions and see how your portfolio would have grown over time.' },
             { icon:'📊', title:'Chart & Screener',        href:'/charts',                 desc:'Live price charts and stock screener for ASX shares and Australian ETFs. Search any symbol and filter by market cap, price, and volume.' },
             { icon:'🕯️', title:'Trading Simulator',       href:'/trading-grounds',        desc:'Practice BUY & SELL on a live candlestick simulator with no real money. Add indicators, draw trend lines, and track your paper trading P&L.' },
+            { icon:'🔁', title:'Backtesting',              href:'/backtesting',            desc:'Replay historical ASX price data and test your trading strategy with paper trades. Jump to any year, add indicators, and track your results.' },
           ].map(tool => (
             <div key={tool.title} className="tool-card">
               <div className="tool-icon">{tool.icon}</div>

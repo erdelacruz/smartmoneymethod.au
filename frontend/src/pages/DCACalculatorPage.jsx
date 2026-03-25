@@ -15,7 +15,7 @@ import React, { useState, useMemo, useEffect, useRef, useCallback } from 'react'
 // ── Helpers ───────────────────────────────────────────────────
 const MONTHS     = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const MIN_YEAR   = 2006;
-const MAX_YEAR   = 2025;
+const MAX_YEAR   = new Date().getFullYear();
 const fmt  = (n) => n.toLocaleString('en-AU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const fmtK = (n) => n >= 1_000_000 ? `$${(n/1_000_000).toFixed(2)}M` : n >= 1_000 ? `$${(n/1_000).toFixed(1)}K` : `$${fmt(n)}`;
 
@@ -88,7 +88,7 @@ function MonthYearPicker({ year, month, onChange }) {
 
 // ── Ticker Search Input ────────────────────────────────────────
 function TickerSearch({ value, onChange }) {
-  const [query,       setQuery]       = useState(value);
+  const [query,       setQuery]       = useState(value ?? '');
   const [suggestions, setSuggestions] = useState([]);
   const [open,        setOpen]        = useState(false);
   const [loading,     setLoading]     = useState(false);
@@ -264,7 +264,7 @@ function DCAChart({ data }) {
 
 // ── Main Page ─────────────────────────────────────────────────
 export default function DCACalculatorPage() {
-  const [ticker,         setTicker]         = useState('BHP');
+  const [ticker,         setTicker]         = useState('NDQ');
   const [startYear,      setStartYear]      = useState(2020);
   const [startMonth,     setStartMonth]     = useState(1);
   const [endYear,        setEndYear]        = useState(2025);
@@ -394,12 +394,15 @@ export default function DCACalculatorPage() {
           </div>
 
           <div className="dca-presets">
-            {[
-              { label:'3Y',  sy:2022, sm:1, ey:2025, em:12 },
-              { label:'5Y',  sy:2020, sm:1, ey:2025, em:12 },
-              { label:'10Y', sy:2015, sm:1, ey:2025, em:12 },
-              { label:'15Y', sy:2010, sm:1, ey:2025, em:12 },
-            ].map(p => (
+            {(() => {
+              const cy = MAX_YEAR, cm = new Date().getMonth() + 1;
+              return [
+                { label:'3Y',  sy:cy-3, sm:cm, ey:cy, em:cm },
+                { label:'5Y',  sy:cy-5, sm:cm, ey:cy, em:cm },
+                { label:'10Y', sy:cy-10,sm:cm, ey:cy, em:cm },
+                { label:'15Y', sy:cy-15,sm:cm, ey:cy, em:cm },
+              ];
+            })().map(p => (
               <button
                 key={p.label}
                 className={`dca-preset-btn${startYear===p.sy&&startMonth===p.sm&&endYear===p.ey&&endMonth===p.em?' active':''}`}

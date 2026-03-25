@@ -109,6 +109,13 @@ export default function Navbar() {
                     <div className="nav-dropdown-sub">Simulate BUY & SELL on a live candlestick chart</div>
                   </div>
                 </Link>
+                <Link to="/backtesting" className="nav-dropdown-item" onClick={() => setOpenMenu(null)}>
+                  <span className="nav-dropdown-icon">🔁</span>
+                  <div>
+                    <div className="nav-dropdown-label">Backtesting</div>
+                    <div className="nav-dropdown-sub">Replay historical ASX price data and test your strategy</div>
+                  </div>
+                </Link>
               </div>
             )}
           </div>

@@ -32,6 +32,7 @@ import BudgetToolPage            from './pages/BudgetToolPage';
 import DCACalculatorPage         from './pages/DCACalculatorPage';
 import ChartsPage               from './pages/ChartsPage';
 import TradingGroundsPage       from './pages/TradingGroundsPage';
+import BacktestingPage          from './pages/BacktestingPage';
 
 // ---------------------------------------------------------------------------
 // Inner app — needs useLocation so must live inside BrowserRouter
@@ -74,6 +75,7 @@ function AppInner() {
           <Route path="/budget"                 element={<BudgetToolPage />} />
           <Route path="/dca-calculator"         element={<DCACalculatorPage />} />
           <Route path="/trading-grounds"        element={<TradingGroundsPage />} />
+          <Route path="/backtesting"            element={<BacktestingPage />} />
           {/* Charts route: handled by always-mounted ChartsPage above */}
           <Route path="/charts"                 element={null} />
           {/* Legacy redirects */}

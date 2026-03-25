@@ -617,10 +617,10 @@ export default function TradingGroundsPage() {
   // ── Render ────────────────────────────────────────────────────────────────
   return (
     <div className="tg-page">
-      <div className="page-hero">
-        <p className="hero-eyebrow">Practice Mode</p>
-        <h1 className="hero-title">Trading Grounds</h1>
-        <p className="hero-sub">Live candlestick simulator — practice BUY &amp; SELL with no real money.</p>
+      <div className="tg-header page-hero">
+        <div className="section-eyebrow">Trading Simulation</div>
+        <h1 className="tg-hero-title">Trading Grounds</h1>
+        <p className="tg-hero-sub">Live candlestick simulator — practice BUY &amp; SELL with no real money.</p>
       </div>
 
       <div className="tg-body">
