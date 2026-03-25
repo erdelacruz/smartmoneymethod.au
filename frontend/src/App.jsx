@@ -19,6 +19,7 @@ import { ThemeProvider } from './context/ThemeContext';
 import Navbar          from './components/Navbar';
 import Footer          from './components/Footer';
 import ProtectedRoute  from './components/ProtectedRoute';
+import AdBanner        from './components/AdBanner';
 
 import PublicPage            from './pages/PublicPage';
 import LoginPage             from './pages/LoginPage';
@@ -37,6 +38,7 @@ import ChartsPage               from './pages/ChartsPage';
 function AppInner() {
   const location = useLocation();
   const isCharts = location.pathname === '/charts';
+  const hideAds  = ['/login', '/admin', '/charts'].includes(location.pathname);
 
   return (
     <>
@@ -78,6 +80,14 @@ function AppInner() {
           <Route path="*"                       element={<Navigate to="/" replace />} />
         </Routes>
       </main>
+
+      {!hideAds && (
+        <AdBanner
+          adSlot="AUTO"
+          adFormat="horizontal"
+          style={{ padding: '8px 0' }}
+        />
+      )}
 
       <Footer />
     </>
