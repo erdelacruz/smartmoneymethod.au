@@ -13,7 +13,6 @@
   ],
   "routes": [
     { "src": "/api/(.*)", "dest": "backend/server.js" },
-    { "src": "/ads.txt", "dest": "backend/server.js" },
-    { "src": "/(.*)", "dest": "frontend/index" }
+    { "src": "/(.*)", "dest": "frontend/$1" }
   ]
 }
