@@ -31,14 +31,6 @@ Frontend runs on **http://localhost:5173**
 
 ---
 
-## Admin credentials
-| Field    | Value      |
-|----------|------------|
-| Username | `admin`    |
-| Password | `admin123` |
-
----
-
 ## Pages
 | URL      | Access | Description |
 |----------|--------|-------------|

@@ -1,5 +1,5 @@
 {
-  "name": "smart-money-method-webapp-backend",
+  "name": "smartmoneymethod.au-backend",
   "version": "1.0.0",
   "description": "Express backend with JWT auth and visitor tracking",
   "main": "server.js",
