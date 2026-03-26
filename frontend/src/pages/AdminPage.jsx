@@ -356,6 +356,10 @@ export default function AdminPage() {
                           <span className="meta-icon">📍</span>
                           {visit.country || 'Unknown'}
                         </span>
+                        <span className="meta-chip">
+                          <span className="meta-icon">🕐</span>
+                          {visit.timezone || 'N/A'}
+                        </span>
                         <span className="meta-chip meta-chip--visits">
                           <span className="meta-icon">🔁</span>
                           {visit.visitCount} {visit.visitCount === 1 ? 'visit' : 'visits'}

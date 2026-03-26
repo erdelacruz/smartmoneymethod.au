@@ -32,14 +32,15 @@ function isLocalIp(ip) {
   return ip === '::1' || ip === '127.0.0.1' || ip === '::ffff:127.0.0.1';
 }
 
-async function getCountry(ip) {
-  if (isLocalIp(ip)) return 'Local';
+async function getGeoInfo(ip) {
+  if (isLocalIp(ip)) return { country: 'Local', timezone: Intl.DateTimeFormat().resolvedOptions().timeZone };
   try {
-    const res  = await fetch(`http://ip-api.com/json/${ip}?fields=status,country`);
+    const res  = await fetch(`http://ip-api.com/json/${ip}?fields=status,country,timezone`);
     const data = await res.json();
-    return data.status === 'success' ? data.country : 'Unknown';
+    if (data.status === 'success') return { country: data.country, timezone: data.timezone };
+    return { country: 'Unknown', timezone: 'Unknown' };
   } catch {
-    return 'Unknown';
+    return { country: 'Unknown', timezone: 'Unknown' };
   }
 }
 
@@ -64,10 +65,14 @@ router.post('/visit', async (req, res) => {
     const os      = [osInfo.name,      osInfo.version].filter(Boolean).join(' ')    || 'Unknown';
     const browser = [browserInfo.name, browserInfo.major].filter(Boolean).join(' ') || 'Unknown';
 
-    const ip          = getClientIp(req);
-    const country     = await getCountry(ip);
-    const lang        = req.headers['accept-language'] || '';
-    const fingerprint = buildFingerprint({ browser, ip, os, lang, ua });
+    if (os === 'Unknown' || browser === 'Unknown') {
+      return res.json({ message: 'Visit not recorded' });
+    }
+
+    const ip              = getClientIp(req);
+    const { country, timezone } = await getGeoInfo(ip);
+    const lang            = req.headers['accept-language'] || '';
+    const fingerprint     = buildFingerprint({ browser, ip, os, lang, ua });
 
     const now = new Date().toISOString();
 
@@ -75,7 +80,7 @@ router.post('/visit', async (req, res) => {
       { fingerprint },
       {
         // On first visit: set all fields
-        $setOnInsert: { fingerprint, os, browser, country, firstSeen: now },
+        $setOnInsert: { fingerprint, os, browser, country, timezone, firstSeen: now },
         // On every visit: update lastSeen
         $set:         { lastSeen: now },
         // On every visit: increment page load counter
