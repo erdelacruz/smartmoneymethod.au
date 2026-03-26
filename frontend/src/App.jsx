@@ -24,7 +24,6 @@ import AdBanner        from './components/AdBanner';
 import PublicPage            from './pages/PublicPage';
 import LoginPage             from './pages/LoginPage';
 import AdminPage             from './pages/AdminPage';
-import TradingIndicatorPage  from './pages/TradingIndicatorPage';
 import ProfitLossPage        from './pages/ProfitLossPage';
 import PayCalculatorPage          from './pages/PayCalculatorPage';
 import CompoundingCalculatorPage  from './pages/CompoundingCalculatorPage';
@@ -33,6 +32,9 @@ import DCACalculatorPage         from './pages/DCACalculatorPage';
 import ChartsPage               from './pages/ChartsPage';
 import TradingGroundsPage       from './pages/TradingGroundsPage';
 import BacktestingPage          from './pages/BacktestingPage';
+import BlogListPage             from './pages/BlogListPage';
+import BlogPostPage             from './pages/BlogPostPage';
+import BlogEditorPage           from './pages/BlogEditorPage';
 
 // ---------------------------------------------------------------------------
 // Inner app — needs useLocation so must live inside BrowserRouter
@@ -40,7 +42,9 @@ import BacktestingPage          from './pages/BacktestingPage';
 function AppInner() {
   const location = useLocation();
   const isCharts = location.pathname === '/charts';
-  const hideAds  = ['/login', '/admin', '/charts'].includes(location.pathname);
+  const hideAds  = location.pathname === '/login'
+    || location.pathname === '/admin'
+    || location.pathname.startsWith('/admin/');
 
   return (
     <>
@@ -68,7 +72,6 @@ function AppInner() {
               </ProtectedRoute>
             }
           />
-          <Route path="/indicators"             element={<TradingIndicatorPage />} />
           <Route path="/calculator"             element={<ProfitLossPage />} />
           <Route path="/pay-calculator"         element={<PayCalculatorPage />} />
           <Route path="/compounding-calculator" element={<CompoundingCalculatorPage />} />
@@ -76,6 +79,27 @@ function AppInner() {
           <Route path="/dca-calculator"         element={<DCACalculatorPage />} />
           <Route path="/trading-grounds"        element={<TradingGroundsPage />} />
           <Route path="/backtesting"            element={<BacktestingPage />} />
+          <Route path="/learn"                       element={<Navigate to="/learn/blog" replace />} />
+          <Route path="/learn/trading-strategy"  element={<BlogListPage type="Trading Strategy" />} />
+          <Route path="/learn/investing-strategy" element={<BlogListPage type="Investing Strategy" />} />
+          <Route path="/learn/blog"              element={<BlogListPage type="Blog" />} />
+          <Route path="/learn/:slug"             element={<BlogPostPage />} />
+          <Route
+            path="/admin/blog/new"
+            element={
+              <ProtectedRoute>
+                <BlogEditorPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/blog/edit/:id"
+            element={
+              <ProtectedRoute>
+                <BlogEditorPage />
+              </ProtectedRoute>
+            }
+          />
           {/* Charts route: handled by always-mounted ChartsPage above */}
           <Route path="/charts"                 element={null} />
           {/* Legacy redirects */}

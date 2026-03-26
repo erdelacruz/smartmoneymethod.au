@@ -11,6 +11,7 @@
 // ============================================================
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 // ---------------------------------------------------------------------------
@@ -180,6 +181,13 @@ export default function AdminPage() {
   // Read the logged-in user info and the JWT token from global auth state
   const { user, token } = useAuth();
 
+  const [searchParams] = useSearchParams();
+  const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'stats');
+
+  // Blog state
+  const [blogPosts,   setBlogPosts]   = useState([]);
+  const [blogLoading, setBlogLoading] = useState(false);
+
   // stats: the visitor data object returned by the backend, or null before first fetch
   const [stats,   setStats]   = useState(null);
   const [loading, setLoading] = useState(true);  // True while fetching
@@ -231,6 +239,27 @@ export default function AdminPage() {
     return () => clearInterval(interval);
   }, [fetchStats]); // Re-run if fetchStats changes (i.e. if the token changes)
 
+  // Fetch blog posts when Content tab is active
+  useEffect(() => {
+    if (activeTab !== 'content') return;
+    setBlogLoading(true);
+    fetch('/api/blog/admin/all', {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then(r => r.json())
+      .then(data => { setBlogPosts(data.posts || []); setBlogLoading(false); })
+      .catch(() => setBlogLoading(false));
+  }, [activeTab, token]);
+
+  const deletePost = async (id, title) => {
+    if (!window.confirm(`Delete "${title}"? This cannot be undone.`)) return;
+    await fetch(`/api/blog/${id}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    setBlogPosts(posts => posts.filter(p => p._id !== id));
+  };
+
   // ---------------------------------------------------------------------------
   // Render
   // ---------------------------------------------------------------------------
@@ -245,17 +274,98 @@ export default function AdminPage() {
       </div>
 
       <div className="admin-body">
+
+      {/* ── Tab bar ── */}
+      <div className="admin-tabs">
+        <button
+          className={`admin-tab${activeTab === 'stats' ? ' active' : ''}`}
+          onClick={() => setActiveTab('stats')}
+        >
+          📊 Analytics
+        </button>
+        <button
+          className={`admin-tab${activeTab === 'content' ? ' active' : ''}`}
+          onClick={() => setActiveTab('content')}
+        >
+          ✍️ Content
+        </button>
+      </div>
+
       {/* Manual refresh button — useful when the admin wants instant stats */}
+      {activeTab === 'stats' && (
       <button className="btn-primary refresh-btn" onClick={fetchStats}>
         Refresh Stats
       </button>
+      )}
+
+      {/* ── Content tab ── */}
+      {activeTab === 'content' && (
+        <div className="blog-admin-panel">
+          <div className="blog-admin-toolbar">
+            <h2>Blog Posts</h2>
+            <Link to="/admin/blog/new" className="btn-primary">+ New Post</Link>
+          </div>
+
+          {blogLoading && <p className="loading-text">Loading posts…</p>}
+
+          {!blogLoading && blogPosts.length === 0 && (
+            <div className="blog-empty">
+              <p>No posts yet. <Link to="/admin/blog/new">Create your first post →</Link></p>
+            </div>
+          )}
+
+          {!blogLoading && blogPosts.length > 0 && (
+            <div className="blog-admin-table-wrap">
+              <table className="blog-admin-table">
+                <thead>
+                  <tr>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {blogPosts.map(post => (
+                    <tr key={post._id}>
+                      <td className="blog-table-title">{post.title}</td>
+                      <td>{post.category}</td>
+                      <td>
+                        <span className={`blog-status-badge ${post.published ? 'published' : 'draft'}`}>
+                          {post.published ? '🟢 Published' : '⚪ Draft'}
+                        </span>
+                      </td>
+                      <td className="blog-table-date">
+                        {new Date(post.createdAt).toLocaleDateString('en-AU')}
+                      </td>
+                      <td className="blog-table-actions">
+                        <Link to={`/admin/blog/edit/${post._id}`} className="blog-action-btn">Edit</Link>
+                        {post.published && (
+                          <Link to={`/learn/${post.slug}`} target="_blank" className="blog-action-btn">View</Link>
+                        )}
+                        <button
+                          className="blog-action-btn danger"
+                          onClick={() => deletePost(post._id, post.title)}
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* ── Graph Dashboard ────────────────────────────────────────────────
           Rendered as soon as we have at least one visit to display.
           Four panels: activity timeline + three breakdown bar charts.
           All charts are pure SVG / CSS — no external library required.
       ──────────────────────────────────────────────────────────────────── */}
-      {stats && stats.monthlyStats && stats.uniqueVisitors > 0 && (
+      {activeTab === 'stats' && stats && stats.monthlyStats && stats.uniqueVisitors > 0 && (
         <div className="charts-section">
           {/* KPI cards */}
           <div className="stats-grid">
@@ -309,13 +419,13 @@ export default function AdminPage() {
       )}
 
       {/* Show loading text on the very first load (before stats arrive) */}
-      {loading && !stats && <p className="loading-text">Loading stats…</p>}
+      {activeTab === 'stats' && loading && !stats && <p className="loading-text">Loading stats…</p>}
 
       {/* Error banner — shown when the fetch fails */}
-      {error && <p className="error-banner">{error}</p>}
+      {activeTab === 'stats' && error && <p className="error-banner">{error}</p>}
 
       {/* Stats section — only rendered once we have data */}
-      {stats && (
+      {activeTab === 'stats' && stats && (
         <>
           {/* Recent activity feed */}
           <div className="recent-visits">

@@ -33,7 +33,9 @@
       "/charts",
       "/trading-grounds",
       "/backtesting",
-      "/indicators"
+      "/learn/trading-strategy",
+      "/learn/investing-strategy",
+      "/learn/blog"
     ],
     "skipThirdPartyRequests": true,
     "puppeteerArgs": ["--no-sandbox", "--disable-setuid-sandbox"],

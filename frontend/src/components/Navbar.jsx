@@ -49,6 +49,45 @@ export default function Navbar() {
         <div className="nav-links nav-links-left">
           <Link to="/">Home</Link>
 
+          {/* Learn dropdown */}
+          <div
+            className={`nav-dropdown${openMenu === 'learn' ? ' open' : ''}`}
+            onMouseEnter={() => openDropdown('learn')}
+            onMouseLeave={closeDropdown}
+          >
+            <button className="nav-dropdown-trigger">
+              Learn
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style={{marginLeft:4}}>
+                <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+            {openMenu === 'learn' && (
+              <div className="nav-dropdown-menu" onMouseEnter={() => openDropdown('learn')} onMouseLeave={closeDropdown}>
+                <Link to="/learn/trading-strategy" className="nav-dropdown-item" onClick={() => setOpenMenu(null)}>
+                  <span className="nav-dropdown-icon">📈</span>
+                  <div>
+                    <div className="nav-dropdown-label">Trading Strategy</div>
+                    <div className="nav-dropdown-sub">In-depth guides and strategies for ASX share traders</div>
+                  </div>
+                </Link>
+                <Link to="/learn/investing-strategy" className="nav-dropdown-item" onClick={() => setOpenMenu(null)}>
+                  <span className="nav-dropdown-icon">💰</span>
+                  <div>
+                    <div className="nav-dropdown-label">Investing Strategy</div>
+                    <div className="nav-dropdown-sub">Long-term investment guides for Australian investors</div>
+                  </div>
+                </Link>
+                <Link to="/learn/blog" className="nav-dropdown-item" onClick={() => setOpenMenu(null)}>
+                  <span className="nav-dropdown-icon">✍️</span>
+                  <div>
+                    <div className="nav-dropdown-label">Blog</div>
+                    <div className="nav-dropdown-sub">Financial tips and insights for everyday Australians</div>
+                  </div>
+                </Link>
+              </div>
+            )}
+          </div>
+
           {/* Share/ETF Investing dropdown */}
           <div
             className={`nav-dropdown${openMenu === 'investing' ? ' open' : ''}`}
@@ -88,13 +127,6 @@ export default function Navbar() {
             </button>
             {openMenu === 'trading' && (
               <div className="nav-dropdown-menu" onMouseEnter={() => openDropdown('trading')} onMouseLeave={closeDropdown}>
-                <Link to="/indicators" className="nav-dropdown-item" onClick={() => setOpenMenu(null)}>
-                  <span className="nav-dropdown-icon">📊</span>
-                  <div>
-                    <div className="nav-dropdown-label">Technical Indicators</div>
-                    <div className="nav-dropdown-sub">Price Action Analysis using Moving Average (MA), Darvas Box, RSI & Fibonacci Retracement</div>
-                  </div>
-                </Link>
                 <Link to="/calculator" className="nav-dropdown-item" onClick={() => setOpenMenu(null)}>
                   <span className="nav-dropdown-icon">📈</span>
                   <div>
