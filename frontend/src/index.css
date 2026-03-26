@@ -520,8 +520,8 @@ body::before {
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: center;
-  gap: 60px;
-  padding: 40px 80px 30px;
+  gap: 48px;
+  padding: 20px 64px 16px;
   max-width: 1280px;
   margin: 0 auto;
 }
@@ -633,7 +633,8 @@ body::before {
   transition: opacity .5s ease, transform .5s ease;
   display: flex;
   flex-direction: column;
-  min-height: 360px;
+  min-height: 0;
+  max-height: 420px;
 }
 .hero-slide-active {
   opacity: 1;
@@ -696,14 +697,14 @@ body::before {
   background: var(--bg2);
   border: 1px solid var(--border2);
   border-radius: 16px;
-  padding: 24px;
+  padding: 19px;
   box-shadow: 0 24px 80px rgba(0,0,0,0.5);
 }
 .chart-card-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 14px;
+  margin-bottom: 8px;
 }
 .chart-stock-name {
   font-family: 'DM Mono', monospace;
@@ -750,10 +751,10 @@ body::before {
 .chart-mini-stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  margin-top: 14px;
+  gap: 8px;
+  margin-top: 8px;
 }
-.chart-mini-stat { background: var(--bg3); border-radius: 8px; padding: 10px 12px; }
+.chart-mini-stat { background: var(--bg3); border-radius: 8px; padding: 7px 10px; }
 .chart-mini-stat-label {
   font-size: 10px;
   color: var(--muted);
@@ -1077,6 +1078,29 @@ body::before {
 }
 .pub-lb-head .section-title { font-size: 1.25rem; margin-bottom: .2rem; }
 .pub-lb-sub { font-size: .82rem; color: var(--muted); margin: 0; }
+.pub-lb-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem;
+  margin-top: .4rem;
+}
+.pub-lb-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: .75rem;
+  font-weight: 600;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  color: var(--text2);
+}
+.pub-lb-pill-gold {
+  background: rgba(212,160,23,.12);
+  border-color: rgba(212,160,23,.35);
+  color: #D4A017;
+}
 .pub-lb-cta {
   display: inline-flex;
   align-items: center;

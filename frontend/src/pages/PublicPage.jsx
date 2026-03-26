@@ -30,7 +30,7 @@ const TRADE_CANDLES = [
 ];
 
 function TradingMiniChart({ candles }) {
-  const W = 260, H = 100;
+  const W = 260, H = 80;
   const PAD = { l: 4, r: 4, t: 6, b: 6 };
   const cw = W - PAD.l - PAD.r, ch = H - PAD.t - PAD.b;
   const allP = candles.flatMap(c => [c.h, c.l]);
@@ -79,7 +79,7 @@ const NDQ_DCA_DATA = [
 ];
 
 function DCAMiniChart({ data }) {
-  const W = 260, H = 100;
+  const W = 260, H = 80;
   const PAD = { l: 4, r: 4, t: 8, b: 8 };
   const cw = W - PAD.l - PAD.r, ch = H - PAD.t - PAD.b;
   const maxVal = Math.max(...data.map(d => Math.max(d.value, d.invested))) * 1.02;
@@ -464,7 +464,11 @@ export default function PublicPage() {
               <div>
                 <div className="section-eyebrow">Trading Simulation</div>
                 <h2 className="section-title" style={{ marginBottom: '.4rem' }}>Top Traders</h2>
-                <p className="pub-lb-sub">AUD $10,000 · 6 rounds · highest final capital wins</p>
+                <div className="pub-lb-pills">
+                  <span className="pub-lb-pill">💰 AUD $10,000</span>
+                  <span className="pub-lb-pill">🔄 6 rounds</span>
+                  <span className="pub-lb-pill pub-lb-pill-gold">🏆 Highest Portfolio Value</span>
+                </div>
               </div>
               <Link to="/trading-grounds#tg-chart" className="pub-lb-cta">Play Now →</Link>
             </div>
