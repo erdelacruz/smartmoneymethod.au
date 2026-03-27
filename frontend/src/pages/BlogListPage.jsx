@@ -109,7 +109,7 @@ export default function BlogListPage({ type = 'Blog' }) {
               <Link key={post._id} to={`/learn/${post.slug}`} className="blog-card">
                 {post.featuredImage && (
                   <div className="blog-card-img-wrap">
-                    <img src={post.featuredImage} alt={post.title} className="blog-card-img" />
+                    <img src={post.featuredImage} alt={post.title} className="blog-card-img" loading="lazy" decoding="async" />
                   </div>
                 )}
                 <div className="blog-card-meta">

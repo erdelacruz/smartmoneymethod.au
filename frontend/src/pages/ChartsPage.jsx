@@ -31,7 +31,7 @@ const CHART_INDICATORS = [
 // ---------------------------------------------------------------------------
 // Price Chart tab — TradingView Advanced Chart (native data) + custom indicator toolbar
 // ---------------------------------------------------------------------------
-function PriceChartTab() {
+function PriceChartTab({ isVisible }) {
   const containerRef = useRef(null);
   const suggestRef   = useRef(null);
   const debounceRef  = useRef(null);
@@ -94,8 +94,9 @@ function PriceChartTab() {
     return studies;
   };
 
-  // Rebuild TradingView widget on symbol, theme, or indicator change
+  // Rebuild TradingView widget on symbol, theme, or indicator change — only when visible
   useEffect(() => {
+    if (!isVisible) return;
     const container = containerRef.current;
     if (!container) return;
     container.innerHTML = '';
@@ -130,7 +131,7 @@ function PriceChartTab() {
     container.appendChild(script);
 
     return () => { container.innerHTML = ''; };
-  }, [theme, symbol, enabled]); // eslint-disable-line
+  }, [theme, symbol, enabled, isVisible]); // eslint-disable-line
 
   return (
     <div className="charts-tab-body">
@@ -324,7 +325,7 @@ export default function ChartsPage({ isVisible = true }) {
         {/* Both tabs always mounted — CSS hides inactive tab to preserve widget state */}
         <div className="charts-content">
           <div style={{ display: activeTab === 'chart'    ? 'flex' : 'none', flex: 1, flexDirection: 'column', minHeight: 0 }}>
-            <PriceChartTab />
+            <PriceChartTab isVisible={isVisible && activeTab === 'chart'} />
           </div>
           <div style={{ display: activeTab === 'screener' ? 'flex' : 'none', flex: 1, flexDirection: 'column', minHeight: 0 }}>
             <ScreenerTab isVisible={isVisible && activeTab === 'screener'} />

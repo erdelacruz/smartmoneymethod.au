@@ -140,7 +140,7 @@ export default function BlogPostPage() {
           <div className="blog-post-card">
             {post.featuredImage && (
               <div className="blog-post-featured-img">
-                <img src={post.featuredImage} alt={post.title} />
+                <img src={post.featuredImage} alt={post.title} fetchpriority="high" decoding="async" />
               </div>
             )}
 
