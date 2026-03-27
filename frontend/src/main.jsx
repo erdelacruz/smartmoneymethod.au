@@ -10,18 +10,8 @@ import ReactDOM from 'react-dom/client'; // React 18 uses the new "root" API
 import App from './App';
 import './index.css'; // Global stylesheet imported once here so it applies everywhere
 
-const rootElement = document.getElementById('root');
-if (rootElement.hasChildNodes()) {
-  ReactDOM.hydrateRoot(
-    rootElement,
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
-  );
-} else {
-  ReactDOM.createRoot(rootElement).render(
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
-  );
-}
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
