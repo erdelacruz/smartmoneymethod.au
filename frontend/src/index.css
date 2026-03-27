@@ -2,6 +2,15 @@
    Global Stylesheet — Smart Money Method Australia
    ============================================================ */
 
+/* Collapse AdSense containers when no ad fills */
+ins.adsbygoogle[data-ad-status="unfilled"] {
+  display: none !important;
+  height: 0 !important;
+}
+ins.adsbygoogle[data-ad-status="unfilled"] + * {
+  margin-top: 0 !important;
+}
+
 :root {
   --bg:         #0B1219;
   --bg2:        #0F1A24;
