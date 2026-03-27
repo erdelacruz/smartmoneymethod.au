@@ -111,7 +111,7 @@ function AppInner() {
 
       {!hideAds && (
         <AdBanner
-          adSlot="AUTO"
+          adSlot="1823951895"
           adFormat="horizontal"
           style={{ padding: '8px 0' }}
         />
