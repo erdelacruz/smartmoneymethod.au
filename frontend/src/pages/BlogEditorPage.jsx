@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, useParams }  from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import * as mammoth from 'mammoth';
 
 // ── Image compression (canvas API — no dependencies) ─────────────────────────
 function compressImage(file, maxWidth = 1200, quality = 0.82) {
@@ -54,20 +55,20 @@ function RichTextEditor({ initialValue, onChange }) {
     imgInputRef.current?.click();
   }, []);
 
-  const onImageFileChange = useCallback(async (e) => {
+  const onImageFileChange = useCallback((e) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    try {
-      const src = await compressImage(file, 900, 0.85);
+    const reader = new FileReader();
+    reader.onload = (ev) => {
       editorRef.current.focus();
       document.execCommand(
         'insertHTML', false,
-        `<img src="${src}" alt="" style="max-width:100%;height:auto;border-radius:8px;margin:12px 0;display:block;" />`
+        `<img src="${ev.target.result}" alt="" style="max-width:100%;height:auto;margin:12px 0;display:block;" />`
       );
       onChange(editorRef.current.innerHTML);
-    } catch {
-      alert('Image could not be processed. Please try a different file.');
-    }
+    };
+    reader.onerror = () => alert('Image could not be read. Please try a different file.');
+    reader.readAsDataURL(file);
     e.target.value = '';
   }, [onChange]);
 
@@ -153,8 +154,29 @@ export default function BlogEditorPage() {
   const [saving,        setSaving]        = useState(false);
   const [error,         setError]         = useState('');
   const [loadingPost,   setLoadingPost]   = useState(!!id);
+  const [editorKey,     setEditorKey]     = useState(0);
+  const [docxImporting, setDocxImporting] = useState(false);
 
   const featImgInputRef = useRef(null);
+  const docxInputRef    = useRef(null);
+
+  const handleDocxImport = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setDocxImporting(true);
+    setError('');
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const result = await mammoth.convertToHtml({ arrayBuffer });
+      setContent(result.value);
+      setEditorKey(k => k + 1); // force RichTextEditor remount with new content
+    } catch {
+      setError('Could not read the .docx file. Please try again.');
+    } finally {
+      setDocxImporting(false);
+      e.target.value = '';
+    }
+  };
 
   // Load existing post when editing
   useEffect(() => {
@@ -266,8 +288,25 @@ export default function BlogEditorPage() {
           </div>
 
           <div className="blog-field">
-            <label className="blog-field-label">Content</label>
-            <RichTextEditor initialValue={content} onChange={setContent} />
+            <div className="blog-field-label-row">
+              <label className="blog-field-label">Content</label>
+              <button
+                type="button"
+                className="docx-import-btn"
+                onClick={() => docxInputRef.current?.click()}
+                disabled={docxImporting}
+              >
+                {docxImporting ? '⏳ Importing…' : '📄 Import .docx'}
+              </button>
+              <input
+                ref={docxInputRef}
+                type="file"
+                accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                style={{ display: 'none' }}
+                onChange={handleDocxImport}
+              />
+            </div>
+            <RichTextEditor key={editorKey} initialValue={content} onChange={setContent} />
           </div>
 
         </div>

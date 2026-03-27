@@ -12,7 +12,7 @@ import { useEffect, useRef } from 'react';
  * @param {string}  adFormat - 'auto' | 'rectangle' | 'vertical' | 'horizontal'
  * @param {object}  style    - Optional wrapper style overrides
  */
-export default function AdBanner({ adSlot, adFormat = 'auto', style = {} }) {
+export default function AdBanner({ adSlot, adFormat = 'auto', style = {}, insRef }) {
   const adRef = useRef(null);
 
   useEffect(() => {
@@ -28,7 +28,7 @@ export default function AdBanner({ adSlot, adFormat = 'auto', style = {} }) {
   return (
     <div style={{ textAlign: 'center', overflow: 'hidden', minHeight: 0, ...style }}>
       <ins
-        ref={adRef}
+        ref={el => { adRef.current = el; if (insRef) insRef.current = el; }}
         className="adsbygoogle"
         style={{ display: 'block', minHeight: 0 }}
         data-ad-client="ca-pub-6438914517960882"
