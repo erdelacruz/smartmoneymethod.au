@@ -212,9 +212,9 @@ function calcATR(candles, period = 14) {
 
 // ── Indicator catalogue (for search dropdown) ─────────────────────────────────
 const INDICATOR_CATALOG = [
-  { key: 'sma20',  label: 'SMA 20',          group: 'Moving Average', dot: '#5B9CF6', desc: 'Simple Moving Average (20-period)' },
-  { key: 'sma50',  label: 'SMA 50',          group: 'Moving Average', dot: '#F0A500', desc: 'Simple Moving Average (50-period)' },
-  { key: 'sma200', label: 'SMA 200',         group: 'Moving Average', dot: '#A855F7', desc: 'Simple Moving Average (200-period)' },
+  { key: 'sma20',  label: 'SMA 20',          group: 'Moving Average', dot: '#F0A500', desc: 'Simple Moving Average (20-period)' },
+  { key: 'sma50',  label: 'SMA 50',          group: 'Moving Average', dot: '#5B9CF6', desc: 'Simple Moving Average (50-period)' },
+  { key: 'sma100', label: 'SMA 100',         group: 'Moving Average', dot: '#A855F7', desc: 'Simple Moving Average (100-period)' },
   { key: 'bb',     label: 'Bollinger Bands', group: 'Overlay',        dot: '#8A9BB0', desc: 'Bollinger Bands (20, ±2σ)' },
   { key: 'darvas', label: 'Auto Darvas',     group: 'Overlay',        dot: '#D4A017', desc: 'Darvas Box auto-detection' },
   { key: 'vwap',   label: 'VWAP',           group: 'Overlay',        dot: '#F04E4E', desc: 'Volume Weighted Average Price' },
@@ -460,9 +460,9 @@ function TradingChart({
       } else if (s[key]) { chartRef.current?.removeSeries(s[key]); s[key] = null; }
     };
 
-    setLine('sma20',  calcSMA(candles, 20),  '#5B9CF6');
-    setLine('sma50',  calcSMA(candles, 50),  '#F0A500');
-    setLine('sma200', calcSMA(candles, 200), '#A855F7');
+    setLine('sma20',  calcSMA(candles, 20),  '#F0A500');
+    setLine('sma50',  calcSMA(candles, 50),  '#5B9CF6');
+    setLine('sma100', calcSMA(candles, 100), '#A855F7');
     setLine('vwap',   calcVWAP(candles),     '#F04E4E');
 
     if (enabled.bb) {
@@ -575,7 +575,7 @@ export default function TradingGroundsPage() {
   const [position,     setPosition]     = useState(null);
   const [trades,       setTrades]       = useState([]);
   const [enabled,      setEnabled]      = useState({
-    sma20: true, sma50: true, sma200: false,
+    sma20: true, sma50: true, sma100: false,
     bb: false, darvas: false, vwap: false,
     rsi: false, macd: false, atr: false,
   });
@@ -871,9 +871,9 @@ export default function TradingGroundsPage() {
           <div className="tg-toolbar-group">
             <span className="tg-toolbar-label">Moving Avg</span>
             {[
-              { key: 'sma20',  label: 'SMA 20',  dot: '#5B9CF6' },
-              { key: 'sma50',  label: 'SMA 50',  dot: '#F0A500' },
-              { key: 'sma200', label: 'SMA 200', dot: '#A855F7' },
+              { key: 'sma20',  label: 'SMA 20',  dot: '#F0A500' },
+              { key: 'sma50',  label: 'SMA 50',  dot: '#5B9CF6' },
+              { key: 'sma100', label: 'SMA 100', dot: '#A855F7' },
             ].map(({ key, label, dot }) => (
               <button key={key} className={`tg-ind-btn${enabled[key] ? ' active' : ''}`}
                 style={enabled[key] ? { borderColor: dot, color: dot } : {}} onClick={() => toggle(key)}>
